@@ -1,0 +1,79 @@
+version: '3.9'
+
+# TODO logi z lokiego nie działają
+# TODO napisać testy k6 w tym projekcie
+# TODO uruchomić całośc na google cloud
+# TODO uruchomić całośc na azure
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+
+  postgres_exporter:
+    image: wrouesnel/postgres_exporter
+    container_name: postgres_exporter
+    environment:
+      DATA_SOURCE_NAME: "postgresql://postgres:postgres@host.docker.internal:5432/postgres?sslmode=disable"
+    ports:
+      - "9187:9187"
+
+  log_poller:
+    build:
+      context: ./logs/logs-poller
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8002"
+    container_name: log_poller
+    environment:
+      - LOG_ENDPOINT=http://host.docker.internal:8000/logs/
+    volumes:
+      - logs:/var/log
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8002/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  fluentbit:
+    image: fluent/fluent-bit:latest
+    container_name: fluentbit
+    volumes:
+      - ./logs/fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro
+      - ./logs/fluent-bit/parsers.conf:/fluent-bit/etc/parsers.conf:ro
+      - logs:/var/log
+    depends_on:
+      - log_poller
+
+  loki:
+    image: grafana/loki:2.8.2
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - loki_data:/loki
+    depends_on:
+      - fluentbit
+
+volumes:
+  prometheus_data:
+    name: prometheus_data
+  loki_data:
+    name: loki_data
+  logs:
+    name: logs
