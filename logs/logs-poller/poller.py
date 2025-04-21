@@ -7,8 +7,7 @@ import threading
 from datetime import datetime
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-# TODO sprawdzić wysłanie logów do fluent-bit
-# TODO dodać
+# TODO zbieranie logów z wielu endpointów
 
 app = FastAPI()
 
