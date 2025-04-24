@@ -9,6 +9,9 @@ services:
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-remote-write-receiver"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
@@ -72,17 +75,13 @@ services:
 
   k6:
     build:
-      context: .
-      dockerfile: ./load-tests/Dockerfile
-    volumes:
-      - ./load-tests/tests:/app
+      context: ./load-tests
+      dockerfile: Dockerfile
     depends_on:
       - prometheus
       - grafana
     environment:
-      - K6_COMPATIBILITY_MODE=experimental_enhanced
       - K6_PROMETHEUS_RW_SERVER_URL=http://host.docker.internal:9090/api/v1/write
-    command: run /app/dist/ecommerce-test.ts
 
 volumes:
   prometheus_data:

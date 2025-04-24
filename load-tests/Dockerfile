@@ -1,20 +1,6 @@
-FROM node:lts-alpine
+FROM grafana/k6:0.57.0
 
-RUN apk add --no-cache \
-    bash \
-    git \
-    make \
-    g++ \
-    && npm install -g typescript webpack webpack-cli ts-loader
+WORKDIR /tests
+COPY ./tests .
 
-WORKDIR /app
-
-COPY ./package.json ./package-lock.json ./
-
-RUN npm install
-
-COPY ./load-tests/tests /app/tests
-
-RUN tsc
-
-CMD ["k6", "run", "/app/dist/ecommerce-test.ts"]
+ENTRYPOINT ["k6","run","--out","experimental-prometheus-rw","ecommerce-test.ts"]
