@@ -84,6 +84,8 @@ services:
       - grafana
     environment:
       - K6_PROMETHEUS_RW_SERVER_URL=http://host.docker.internal:9090/api/v1/write
+    volumes:
+      - ./load-tests/tests/:/tests
 
 volumes:
   prometheus_data:
