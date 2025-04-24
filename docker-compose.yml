@@ -1,6 +1,8 @@
 version: '3.9'
 
 # TODO logi z lokiego nie działają
+# TODO skonfigurować pobieranie danych z azure i google cloud w prometheus
+# TODO skonfigurować pobieranie danych z azure (15136, 19785) i google cloud do dashboard (12863 )
 # TODO napisać testy k6 w tym projekcie
 # TODO uruchomić całośc na google cloud
 # TODO uruchomić całośc na azure
