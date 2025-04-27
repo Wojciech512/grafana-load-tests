@@ -75,6 +75,7 @@ services:
     depends_on:
       - fluentbit
 
+  #TODO uruchomić te same kontenery z env BASE_URL adekwatnym do url od chmury
   k6:
     build:
       context: ./load-tests
