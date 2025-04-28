@@ -6,6 +6,14 @@ version: '3.9'
 # TODO uruchomić całośc na google cloud
 # TODO uruchomić całośc na azure
 
+# 1. Startujesz monitoring bez k6
+#docker compose up -d
+
+# 2. Gdy baza danych / aplikacje są gotowe – uruchamiasz testy
+#docker compose --profile loadtests up -d k6-gcp k6-azure k6-local
+
+#Zbieranie pomiarów do pracy magisterskiej:
+# - podczas pomiarów uruchoić testy przynajmniej 3 razy
 services:
   prometheus:
     image: prom/prometheus:latest
@@ -26,6 +34,14 @@ services:
       - "3000:3000"
     volumes:
       - ./provisioning:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=Test123!
+      - GRAFANA_TOKEN=${GRAFANA_TOKEN}
+      - K6_TEST_START=${TEST_START}
+      - GRAFANA_URL=http://grafana:3000
+      - RUN_ID=${RUN_ID:-$(date +%s)}
     depends_on:
       - prometheus
 
@@ -37,42 +53,42 @@ services:
     ports:
       - "9187:9187"
 
-  log_poller:
-    build:
-      context: ./logs/logs-poller
-      dockerfile: Dockerfile
-    ports:
-      - "8002:8002"
-    container_name: log_poller
-    environment:
-      - LOG_ENDPOINT=http://host.docker.internal:8000/logs/
-    volumes:
-      - logs:/var/log
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8002/health || exit 1"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
-
-  fluentbit:
-    image: fluent/fluent-bit:latest
-    container_name: fluentbit
-    volumes:
-      - ./logs/fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro
-      - ./logs/fluent-bit/parsers.conf:/fluent-bit/etc/parsers.conf:ro
-      - logs:/var/log
-    depends_on:
-      - log_poller
-
-  loki:
-    image: grafana/loki:2.8.2
-    container_name: loki
-    ports:
-      - "3100:3100"
-    volumes:
-      - loki_data:/loki
-    depends_on:
-      - fluentbit
+#  log_poller:
+#    build:
+#      context: ./logs/logs-poller
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8002:8002"
+#    container_name: log_poller
+#    environment:
+#      - LOG_ENDPOINT=http://host.docker.internal:8000/logs/
+#    volumes:
+#      - logs:/var/log
+#    healthcheck:
+#      test: ["CMD-SHELL", "curl -f http://localhost:8002/health || exit 1"]
+#      interval: 15s
+#      timeout: 5s
+#      retries: 3
+#
+#  fluentbit:
+#    image: fluent/fluent-bit:latest
+#    container_name: fluentbit
+#    volumes:
+#      - ./logs/fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro
+#      - ./logs/fluent-bit/parsers.conf:/fluent-bit/etc/parsers.conf:ro
+#      - logs:/var/log
+#    depends_on:
+#      - log_poller
+#
+#  loki:
+#    image: grafana/loki:2.8.2
+#    container_name: loki
+#    ports:
+#      - "3100:3100"
+#    volumes:
+#      - loki_data:/loki
+#    depends_on:
+#      - fluentbit
 
   k6-base: &common
     build:
@@ -81,8 +97,16 @@ services:
     depends_on:
       - prometheus
       - grafana
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 4G
     environment:
       - K6_PROMETHEUS_RW_SERVER_URL=http://host.docker.internal:9090/api/v1/write
+      - K6_PROMETHEUS_RW_TREND_STATS=p(95),avg,count
+      - GRAFANA_URL=host.docker.internal:3000
+      - GRAFANA_TOKEN=${GRAFANA_TOKEN}
     volumes:
       - ./load-tests/tests/:/tests
     profiles: ["loadtests"]
@@ -91,21 +115,22 @@ services:
     extends: { service: k6-base }
     environment:
       - BASE_URL=https://service.a.run.app
-      - K6_PROMETHEUS_LABELS=cloud=gcp
+      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
 
   k6-azure:
     extends: { service: k6-base }
     environment:
       - BASE_URL=https://service.azurewebsites.net
-      - K6_PROMETHEUS_LABELS=cloud=azure
+      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
 
   k6-local:
     extends: { service: k6-base }
     environment:
       - BASE_URL=http://host.docker.internal:8000
-      - K6_PROMETHEUS_LABELS=cloud=local
+      - K6_PROMETHEUS_LABELS="cloud=local,run=$(date +%s)"
 
 volumes:
+  grafana_data: {}
   prometheus_data: {}
   loki_data: {}
   logs: {}

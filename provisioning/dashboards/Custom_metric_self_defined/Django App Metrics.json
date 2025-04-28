@@ -43,6 +43,65 @@
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
         "type": "dashboard"
+      },
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "dark-green",
+        "name": "k6 - test start",
+        "target": {
+          "limit": 100,
+          "matchAny": true,
+          "queryType": "annotations",
+          "tags": [
+            "test_start"
+          ],
+          "type": "tags"
+        }
+      },
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "dark-red",
+        "name": "k6 - test end",
+        "target": {
+          "limit": 100,
+          "matchAny": true,
+          "queryType": "annotations",
+          "refId": "Anno",
+          "tags": [
+            "test_end"
+          ],
+          "type": "tags"
+        }
+      },
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "dark-orange",
+        "name": "k6 - test crash",
+        "target": {
+          "limit": 100,
+          "matchAny": true,
+          "queryType": "annotations",
+          "refId": "Anno",
+          "tags": [
+            "test_crash"
+          ],
+          "type": "tags"
+        }
       }
     ]
   },

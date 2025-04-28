@@ -10,9 +10,51 @@
 
 import http, { RefinedResponse, ResponseType, RefinedParams } from "k6/http";
 import { sleep, check } from "k6";
+import exec from "k6/execution";
+
+/* ---------- annotation helpers ---------- */
+const url = `http://${__ENV.GRAFANA_URL}/api/annotations`;
+const token = __ENV.GRAFANA_TOKEN;
+let start = 0;
+
+export function setup() {
+  start = Date.now();
+  http.post(
+    url,
+    JSON.stringify({
+      time: start,
+      tags: ["test_start", `run_id=${__ENV.RUN_ID}`],
+      text: `k6 ${__ENV.CLOUD} run rozpoczęty`,
+    }),
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+}
+
+export function teardown() {
+  http.post(
+    url,
+    JSON.stringify({
+      time: start,
+      timeEnd: Date.now(),
+      tags: ["test_end", `run_id=${__ENV.RUN_ID}`],
+      text: `k6 ${__ENV.CLOUD} zakończony; maxVUs=${exec.instance.vusInitialized}`,
+    }),
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+}
 
 /* ---------- konfiguracja globalna ---------- */
-const BASE = __ENV.BASE_URL ?? "http://host.docker.internal:8000";
+const BASE = __ENV.BASE_URL;
 
 /* ---------- helper CSRF ---------- */
 function csrfHeaders(
@@ -30,51 +72,74 @@ function csrfHeaders(
 
 /* ---------- stary scenariusz użytkownika ---------- */
 export function userJourney() {
-  /* 1. rejestracja */
-  let page = http.get(`${BASE}/account/register`);
-  let headers = csrfHeaders(page);
+  try {
+    /* 1. rejestracja */
+    let page = http.get(`${BASE}/account/register`);
+    let headers = csrfHeaders(page);
 
-  const regBody = {
-    username: `user${__VU}`,
-    email: `user${__VU}@test.com`,
-    password1: "Test123!",
-    password2: "Test123!",
-  };
-  let res = http.post(`${BASE}/account/register`, regBody, headers);
-  check(res, { "register ok": (r) => [200, 302].includes(r.status) });
+    const regBody = {
+      username: `user${__VU}`,
+      email: `user${__VU}@test.com`,
+      password1: "Test123!",
+      password2: "Test123!",
+    };
+    let res = http.post(`${BASE}/account/register`, regBody, headers);
+    check(res, { "register ok": (r) => [200, 302].includes(r.status) });
 
-  /* 2. logowanie */
-  page = http.get(`${BASE}/account/login`);
-  headers = csrfHeaders(page);
-  const loginBody = { username: `user${__VU}`, password: "Test123!" };
-  res = http.post(`${BASE}/account/login`, loginBody, headers);
-  check(res, { "login ok": (r) => [200, 302].includes(r.status) });
-  sleep(1);
+    /* 2. logowanie */
+    page = http.get(`${BASE}/account/login`);
+    headers = csrfHeaders(page);
+    const loginBody = { username: `user${__VU}`, password: "Test123!" };
+    res = http.post(`${BASE}/account/login`, loginBody, headers);
+    check(res, { "login ok": (r) => [200, 302].includes(r.status) });
+    sleep(1);
 
-  /* 3. produkt */
-  res = http.get(`${BASE}/product/electronics-produkt-1-41389/`);
-  check(res, { product: (r) => r.status === 200 });
-  sleep(1);
+    /* 3. produkt */
+    res = http.get(`${BASE}/product/electronics-produkt-1-41389/`);
+    check(res, { product: (r) => r.status === 200 });
+    sleep(1);
 
-  /* 4. koszyk */
-  const cartBody = { product_id: "68226", quantity: "1" };
-  res = http.post(`${BASE}/cart/`, cartBody, headers);
-  check(res, { cart: (r) => [200, 302].includes(r.status) });
-  sleep(1);
+    /* 4. koszyk */
+    const cartBody = { product_id: "68226", quantity: "1" };
+    res = http.post(`${BASE}/cart/`, cartBody, headers);
+    check(res, { cart: (r) => [200, 302].includes(r.status) });
+    sleep(1);
 
-  /* 5-6. checkout + dashboard */
-  check(http.get(`${BASE}/payment/checkout`), {
-    checkout: (r) => r.status === 200,
-  });
-  check(http.get(`${BASE}/account/dashboard`), {
-    dash: (r) => r.status === 200,
-  });
-  sleep(2);
+    /* 5-6. checkout + dashboard */
+    check(http.get(`${BASE}/payment/checkout`), {
+      checkout: (r) => r.status === 200,
+    });
+    check(http.get(`${BASE}/account/dashboard`), {
+      dash: (r) => r.status === 200,
+    });
+    sleep(2);
+  } catch (err: any) {
+    http.post(
+      `${url}/api/annotations`,
+      JSON.stringify({
+        time: Date.now(),
+        tags: ["test_crash", `run_id=${__ENV.RUN_ID}`],
+        text: `k6 crash: ${err.message}`,
+      }),
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    throw err;
+  }
 }
 
 /* ---------- scenariusze obciążenia ---------- */
 export const options = {
-  thresholds: { checks: ["rate==1"] }, // abortOnFail domyślnie true
+  thresholds: {
+    http_req_failed: ["rate<=0.01"],
+    http_req_duration: ["p(95)<800", "p(99)<1500"],
+    checks: ["rate>=0.95"],
+  },
   scenarios: {
     /* 1) Cold-start / smoke – 1 iteracja po 15 min bezruchu */
     cold_start: {
