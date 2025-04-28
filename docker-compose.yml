@@ -3,7 +3,6 @@ version: '3.9'
 # TODO logi z lokiego nie działają
 # TODO skonfigurować pobieranie danych z azure i google cloud w prometheus
 # TODO skonfigurować pobieranie danych z azure (15136, 19785) i google cloud do dashboard (12863 )
-# TODO napisać testy k6 w tym projekcie
 # TODO uruchomić całośc na google cloud
 # TODO uruchomić całośc na azure
 
@@ -75,8 +74,7 @@ services:
     depends_on:
       - fluentbit
 
-  #TODO uruchomić te same kontenery z env BASE_URL adekwatnym do url od chmury
-  k6:
+  k6-base: &common
     build:
       context: ./load-tests
       dockerfile: Dockerfile
@@ -87,11 +85,27 @@ services:
       - K6_PROMETHEUS_RW_SERVER_URL=http://host.docker.internal:9090/api/v1/write
     volumes:
       - ./load-tests/tests/:/tests
+    profiles: ["loadtests"]
+
+  k6-gcp:
+    extends: { service: k6-base }
+    environment:
+      - BASE_URL=https://service.a.run.app
+      - K6_PROMETHEUS_LABELS=cloud=gcp
+
+  k6-azure:
+    extends: { service: k6-base }
+    environment:
+      - BASE_URL=https://service.azurewebsites.net
+      - K6_PROMETHEUS_LABELS=cloud=azure
+
+  k6-local:
+    extends: { service: k6-base }
+    environment:
+      - BASE_URL=http://host.docker.internal:8000
+      - K6_PROMETHEUS_LABELS=cloud=local
 
 volumes:
-  prometheus_data:
-    name: prometheus_data
-  loki_data:
-    name: loki_data
-  logs:
-    name: logs
+  prometheus_data: {}
+  loki_data: {}
+  logs: {}
