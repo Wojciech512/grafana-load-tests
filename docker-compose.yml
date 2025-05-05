@@ -1,19 +1,22 @@
 version: '3.9'
 
-# TODO logi z lokiego nie działają
-# TODO skonfigurować pobieranie danych z azure i google cloud w prometheus
-# TODO skonfigurować pobieranie danych z azure (15136, 19785) i google cloud do dashboard (12863 )
+#2.1 Azure Monitor
+#Azure Monitor automatycznie gromadzi platformowe metryki (CPU, pamięć, dysk, sieć, instancje, autoscaling) bez dodatkowych opłat za ich zbieranie i wizualizację w Metrics Explorer
+#Microsoft Learn. Niektóre metryki gościa (guest metrics) wymagają zainstalowania agenta, ale standardowe platformowe są dostępne „od ręki”
+#Microsoft Learn. Ceny za logi i dodatkowe zapytania analizujące (Log Analytics) zaczynają się od $0.10 GB dla eksportu i $0.005 GB dla zapytań, a za metryki w Metrics Explorer płaci się zgodnie z zużyciem (pay-as-you-go)
+#Azure.
+
+#2.2 Google Cloud Monitoring
+#Cloud Monitoring (dawniej Stackdriver) oferuje bibliotekę wbudowanych dashboardów i widżetów do szybkiego wyświetlania metryk CPU, pamięci, ruchu sieciowego i autoscalingu bez konieczności instalacji eksportera
+#Google Cloud. Darmowy próg obejmuje 1 mln zwróconych szeregów czasowych miesięcznie, a kolejne kosztują $0.50 za milion zwróconych serii, co przekłada się na około $3.82 miesięcznie dla typowego zestawu 10 metryk śledzonych co 5 minut przez 30 dni
+#Google Cloud.
+
+# TODO przygotować monitoring na google cloud i azure (CPU, RAM, sieć, autoscaling)
+# TODO eksporter metryk bazy danych, czy warto?
+# TODO skonfigurować pobieranie danych z azure i google cloud w prometheus ( wkażdym z dashboardów musi być jasno określony dostawca w dropdownie)
 # TODO uruchomić całośc na google cloud
 # TODO uruchomić całośc na azure
 
-# 1. Startujesz monitoring bez k6
-#docker compose up -d
-
-# 2. Gdy baza danych / aplikacje są gotowe – uruchamiasz testy
-#docker compose --profile loadtests up -d k6-gcp k6-azure k6-local
-
-#Zbieranie pomiarów do pracy magisterskiej:
-# - podczas pomiarów uruchoić testy przynajmniej 3 razy
 services:
   prometheus:
     image: prom/prometheus:latest
@@ -104,7 +107,7 @@ services:
           memory: 4G
     environment:
       - K6_PROMETHEUS_RW_SERVER_URL=http://host.docker.internal:9090/api/v1/write
-      - K6_PROMETHEUS_RW_TREND_STATS=p(95),avg,count
+      - K6_PROMETHEUS_RW_TREND_STATS=p(95),p(99),count,min,max,avg,sum
       - GRAFANA_URL=host.docker.internal:3000
       - GRAFANA_TOKEN=${GRAFANA_TOKEN}
     volumes:

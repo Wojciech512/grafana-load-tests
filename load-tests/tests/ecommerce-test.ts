@@ -95,7 +95,7 @@ export function userJourney() {
     sleep(1);
 
     /* 3. produkt */
-    res = http.get(`${BASE}/product/electronics-produkt-1-41389/`);
+    res = http.get(`${BASE}/product/electronics-produkt-1-6371/`);
     check(res, { product: (r) => r.status === 200 });
     sleep(1);
 
@@ -136,9 +136,28 @@ export function userJourney() {
 /* ---------- scenariusze obciążenia ---------- */
 export const options = {
   thresholds: {
-    http_req_failed: ["rate<=0.01"],
-    http_req_duration: ["p(95)<800", "p(99)<1500"],
-    checks: ["rate>=0.95"],
+    // RED – Requests, Errors, Duration
+    http_reqs: ["rate>=30"], // zapewnienie min. 30 RPS
+    http_req_failed: ["rate<=0.01"], // max 1% błędów
+    http_req_duration: ["p(95)<800", "p(99)<1500"], // p95 < 800 ms, p99 < 1.5 s
+    checks: ["rate>=0.95"], // min. 95% pozytywnych asercji
+
+    // Obciążenie i wolumen
+    data_sent: ["rate>0"], // wysyłanie danych
+    data_received: ["rate>0"], // odbiór danych
+    iterations: ["count>0"], // wykonanie co najmniej jednej iteracji
+    vus: ["value<=100"], // aktywnych VU ≤ 100
+    vus_max: ["value<=100"], // prealokowanych VU ≤ 100
+    dropped_iterations: ["count==0"], // brak odrzuconych iteracji
+    iteration_duration: ["p(95)<2000"], // czas iteracji p95 < 2 s
+
+    // Detale HTTP
+    http_req_blocked: ["avg<100"], // czas blokowania < 100 ms
+    http_req_connecting: ["avg<100"], // nawiązywanie TCP < 100 ms
+    http_req_waiting: ["avg<500"], // TTFB < 500 ms
+    http_req_sending: ["avg<200"], // wysyłanie < 200 ms
+    http_req_receiving: ["avg<200"], // odbieranie < 200 ms
+    http_req_tls_handshaking: ["avg<200"], // handshake TLS < 200 ms
   },
   scenarios: {
     /* 1) Cold-start / smoke – 1 iteracja po 15 min bezruchu */
