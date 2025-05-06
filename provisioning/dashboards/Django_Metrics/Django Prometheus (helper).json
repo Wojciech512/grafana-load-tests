@@ -26,9 +26,7 @@
           "limit": 100,
           "matchAny": true,
           "queryType": "annotations",
-          "tags": [
-            "test_start"
-          ],
+          "tags": ["test_start"],
           "type": "tags"
         }
       },
@@ -46,9 +44,7 @@
           "matchAny": true,
           "queryType": "annotations",
           "refId": "Anno",
-          "tags": [
-            "test_end"
-          ],
+          "tags": ["test_end"],
           "type": "tags"
         }
       },
@@ -66,9 +62,7 @@
           "matchAny": true,
           "queryType": "annotations",
           "refId": "Anno",
-          "tags": [
-            "test_crash"
-          ],
+          "tags": ["test_crash"],
           "type": "tags"
         }
       }
@@ -131,9 +125,7 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "fields": "",
           "values": false
         },
@@ -206,9 +198,7 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "fields": "",
           "values": false
         },
@@ -282,9 +272,7 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "fields": "",
           "values": false
         },
@@ -358,9 +346,7 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "fields": "",
           "values": false
         },

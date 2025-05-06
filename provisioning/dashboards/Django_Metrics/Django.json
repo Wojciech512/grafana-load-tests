@@ -32,9 +32,7 @@
           "limit": 100,
           "matchAny": true,
           "queryType": "annotations",
-          "tags": [
-            "test_start"
-          ],
+          "tags": ["test_start"],
           "type": "tags"
         }
       },
@@ -52,9 +50,7 @@
           "matchAny": true,
           "queryType": "annotations",
           "refId": "Anno",
-          "tags": [
-            "test_end"
-          ],
+          "tags": ["test_end"],
           "type": "tags"
         }
       },
@@ -72,9 +68,7 @@
           "matchAny": true,
           "queryType": "annotations",
           "refId": "Anno",
-          "tags": [
-            "test_crash"
-          ],
+          "tags": ["test_crash"],
           "type": "tags"
         }
       }
@@ -141,9 +135,7 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "fields": "",
           "values": false
         },
@@ -225,9 +217,7 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "fields": "",
           "values": false
         },
@@ -310,9 +300,7 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "fields": "",
           "values": false
         },
@@ -385,9 +373,7 @@
         "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -459,9 +445,7 @@
         "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -532,9 +516,7 @@
         "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -613,9 +595,7 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "fields": "",
           "values": false
         },
@@ -698,9 +678,7 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "fields": "",
           "values": false
         },
@@ -1106,10 +1084,7 @@
       "interval": "30s",
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
+          "calcs": ["mean", "max"],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true
@@ -1195,9 +1170,7 @@
         "namePlacement": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "sum"
-          ],
+          "calcs": ["sum"],
           "fields": "",
           "limit": 20,
           "values": true
@@ -1300,10 +1273,7 @@
       "interval": "30s",
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
+          "calcs": ["mean", "max"],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
@@ -1517,12 +1487,7 @@
   "preload": false,
   "refresh": "30s",
   "schemaVersion": 41,
-  "tags": [
-    "Web",
-    "Django",
-    "Database",
-    "Cache"
-  ],
+  "tags": ["Web", "Django", "Database", "Cache"],
   "templating": {
     "list": [
       {

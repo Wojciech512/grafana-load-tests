@@ -26,9 +26,7 @@
           "limit": 100,
           "matchAny": true,
           "queryType": "annotations",
-          "tags": [
-            "test_start"
-          ],
+          "tags": ["test_start"],
           "type": "tags"
         }
       },
@@ -46,9 +44,7 @@
           "matchAny": true,
           "queryType": "annotations",
           "refId": "Anno",
-          "tags": [
-            "test_end"
-          ],
+          "tags": ["test_end"],
           "type": "tags"
         }
       },
@@ -66,9 +62,7 @@
           "matchAny": true,
           "queryType": "annotations",
           "refId": "Anno",
-          "tags": [
-            "test_crash"
-          ],
+          "tags": ["test_crash"],
           "type": "tags"
         }
       }
@@ -150,11 +144,7 @@
       "options": {
         "alertThreshold": true,
         "legend": {
-          "calcs": [
-            "mean",
-            "max",
-            "min"
-          ],
+          "calcs": ["mean", "max", "min"],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true
@@ -177,15 +167,11 @@
           "format": "time_series",
           "groupBy": [
             {
-              "params": [
-                "$interval"
-              ],
+              "params": ["$interval"],
               "type": "time"
             },
             {
-              "params": [
-                "null"
-              ],
+              "params": ["null"],
               "type": "fill"
             }
           ],
@@ -198,9 +184,7 @@
           "select": [
             [
               {
-                "params": [
-                  "tup_fetched"
-                ],
+                "params": ["tup_fetched"],
                 "type": "field"
               },
               {
@@ -208,9 +192,7 @@
                 "type": "mean"
               },
               {
-                "params": [
-                  "10s"
-                ],
+                "params": ["10s"],
                 "type": "non_negative_derivative"
               }
             ]
@@ -234,15 +216,11 @@
           "format": "time_series",
           "groupBy": [
             {
-              "params": [
-                "$interval"
-              ],
+              "params": ["$interval"],
               "type": "time"
             },
             {
-              "params": [
-                "null"
-              ],
+              "params": ["null"],
               "type": "fill"
             }
           ],
@@ -255,9 +233,7 @@
           "select": [
             [
               {
-                "params": [
-                  "tup_fetched"
-                ],
+                "params": ["tup_fetched"],
                 "type": "field"
               },
               {
@@ -265,9 +241,7 @@
                 "type": "mean"
               },
               {
-                "params": [
-                  "10s"
-                ],
+                "params": ["10s"],
                 "type": "non_negative_derivative"
               }
             ]
@@ -291,15 +265,11 @@
           "format": "time_series",
           "groupBy": [
             {
-              "params": [
-                "$interval"
-              ],
+              "params": ["$interval"],
               "type": "time"
             },
             {
-              "params": [
-                "null"
-              ],
+              "params": ["null"],
               "type": "fill"
             }
           ],
@@ -312,9 +282,7 @@
           "select": [
             [
               {
-                "params": [
-                  "tup_fetched"
-                ],
+                "params": ["tup_fetched"],
                 "type": "field"
               },
               {
@@ -322,9 +290,7 @@
                 "type": "mean"
               },
               {
-                "params": [
-                  "10s"
-                ],
+                "params": ["10s"],
                 "type": "non_negative_derivative"
               }
             ]
@@ -348,15 +314,11 @@
           "format": "time_series",
           "groupBy": [
             {
-              "params": [
-                "$interval"
-              ],
+              "params": ["$interval"],
               "type": "time"
             },
             {
-              "params": [
-                "null"
-              ],
+              "params": ["null"],
               "type": "fill"
             }
           ],
@@ -369,9 +331,7 @@
           "select": [
             [
               {
-                "params": [
-                  "tup_fetched"
-                ],
+                "params": ["tup_fetched"],
                 "type": "field"
               },
               {
@@ -379,9 +339,7 @@
                 "type": "mean"
               },
               {
-                "params": [
-                  "10s"
-                ],
+                "params": ["10s"],
                 "type": "non_negative_derivative"
               }
             ]
@@ -405,15 +363,11 @@
           "format": "time_series",
           "groupBy": [
             {
-              "params": [
-                "$interval"
-              ],
+              "params": ["$interval"],
               "type": "time"
             },
             {
-              "params": [
-                "null"
-              ],
+              "params": ["null"],
               "type": "fill"
             }
           ],
@@ -426,9 +380,7 @@
           "select": [
             [
               {
-                "params": [
-                  "tup_fetched"
-                ],
+                "params": ["tup_fetched"],
                 "type": "field"
               },
               {
@@ -436,9 +388,7 @@
                 "type": "mean"
               },
               {
-                "params": [
-                  "10s"
-                ],
+                "params": ["10s"],
                 "type": "non_negative_derivative"
               }
             ]
@@ -509,9 +459,7 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "fields": "",
           "values": false
         },
@@ -530,15 +478,11 @@
           "format": "time_series",
           "groupBy": [
             {
-              "params": [
-                "$interval"
-              ],
+              "params": ["$interval"],
               "type": "time"
             },
             {
-              "params": [
-                "null"
-              ],
+              "params": ["null"],
               "type": "fill"
             }
           ],
@@ -550,9 +494,7 @@
           "select": [
             [
               {
-                "params": [
-                  "xact_commit"
-                ],
+                "params": ["xact_commit"],
                 "type": "field"
               },
               {
@@ -560,9 +502,7 @@
                 "type": "mean"
               },
               {
-                "params": [
-                  "10s"
-                ],
+                "params": ["10s"],
                 "type": "non_negative_derivative"
               }
             ]
@@ -672,11 +612,7 @@
       "options": {
         "alertThreshold": true,
         "legend": {
-          "calcs": [
-            "mean",
-            "max",
-            "min"
-          ],
+          "calcs": ["mean", "max", "min"],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -699,15 +635,11 @@
           "format": "time_series",
           "groupBy": [
             {
-              "params": [
-                "$interval"
-              ],
+              "params": ["$interval"],
               "type": "time"
             },
             {
-              "params": [
-                "null"
-              ],
+              "params": ["null"],
               "type": "fill"
             }
           ],
@@ -720,9 +652,7 @@
           "select": [
             [
               {
-                "params": [
-                  "buffers_alloc"
-                ],
+                "params": ["buffers_alloc"],
                 "type": "field"
               },
               {
@@ -754,15 +684,11 @@
           "format": "time_series",
           "groupBy": [
             {
-              "params": [
-                "$interval"
-              ],
+              "params": ["$interval"],
               "type": "time"
             },
             {
-              "params": [
-                "null"
-              ],
+              "params": ["null"],
               "type": "fill"
             }
           ],
@@ -775,9 +701,7 @@
           "select": [
             [
               {
-                "params": [
-                  "buffers_alloc"
-                ],
+                "params": ["buffers_alloc"],
                 "type": "field"
               },
               {
@@ -809,15 +733,11 @@
           "format": "time_series",
           "groupBy": [
             {
-              "params": [
-                "$interval"
-              ],
+              "params": ["$interval"],
               "type": "time"
             },
             {
-              "params": [
-                "null"
-              ],
+              "params": ["null"],
               "type": "fill"
             }
           ],
@@ -830,9 +750,7 @@
           "select": [
             [
               {
-                "params": [
-                  "buffers_alloc"
-                ],
+                "params": ["buffers_alloc"],
                 "type": "field"
               },
               {
@@ -864,15 +782,11 @@
           "format": "time_series",
           "groupBy": [
             {
-              "params": [
-                "$interval"
-              ],
+              "params": ["$interval"],
               "type": "time"
             },
             {
-              "params": [
-                "null"
-              ],
+              "params": ["null"],
               "type": "fill"
             }
           ],
@@ -885,9 +799,7 @@
           "select": [
             [
               {
-                "params": [
-                  "buffers_alloc"
-                ],
+                "params": ["buffers_alloc"],
                 "type": "field"
               },
               {
@@ -919,15 +831,11 @@
           "format": "time_series",
           "groupBy": [
             {
-              "params": [
-                "$interval"
-              ],
+              "params": ["$interval"],
               "type": "time"
             },
             {
-              "params": [
-                "null"
-              ],
+              "params": ["null"],
               "type": "fill"
             }
           ],
@@ -940,9 +848,7 @@
           "select": [
             [
               {
-                "params": [
-                  "buffers_alloc"
-                ],
+                "params": ["buffers_alloc"],
                 "type": "field"
               },
               {
@@ -1061,15 +967,11 @@
           "format": "time_series",
           "groupBy": [
             {
-              "params": [
-                "$interval"
-              ],
+              "params": ["$interval"],
               "type": "time"
             },
             {
-              "params": [
-                "null"
-              ],
+              "params": ["null"],
               "type": "fill"
             }
           ],
@@ -1082,9 +984,7 @@
           "select": [
             [
               {
-                "params": [
-                  "conflicts"
-                ],
+                "params": ["conflicts"],
                 "type": "field"
               },
               {
@@ -1116,15 +1016,11 @@
           "format": "time_series",
           "groupBy": [
             {
-              "params": [
-                "$interval"
-              ],
+              "params": ["$interval"],
               "type": "time"
             },
             {
-              "params": [
-                "null"
-              ],
+              "params": ["null"],
               "type": "fill"
             }
           ],
@@ -1137,9 +1033,7 @@
           "select": [
             [
               {
-                "params": [
-                  "deadlocks"
-                ],
+                "params": ["deadlocks"],
                 "type": "field"
               },
               {
@@ -1363,9 +1257,7 @@
   "preload": false,
   "refresh": "",
   "schemaVersion": 41,
-  "tags": [
-    "postgres"
-  ],
+  "tags": ["postgres"],
   "templating": {
     "list": [
       {

@@ -1,0 +1,11 @@
+{
+  "plugins": ["prettier-plugin-terraform-formatter"],
+  "overrides": [
+    {
+      "files": "*.tf",
+      "options": {
+        "parser": "terraform"
+      }
+    }
+  ]
+}

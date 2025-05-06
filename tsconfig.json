@@ -2,14 +2,11 @@
   "compilerOptions": {
     "target": "ES2019",
     "module": "ESNext",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "outDir": "./dist"
   },
-  "include": ["tests/**/*.ts"]
+  "include": ["load-tests/tests/**/*.ts"]
 }

@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "@types/k6": "^1.0.2",
+    "prettier": "3.5.3",
+    "prettier-plugin-terraform-formatter": "1.2.1",
+    "typescript": "^5.8.3"
+  },
+  "scripts": {
+    "format": "prettier --write \"**/*.{js,ts,jsx,tsx,json,css,md,tf}\"",
+    "format:check": "prettier --check \"**/*.{js,ts,jsx,tsx,json,css,md,tf}\""
+  }
+}

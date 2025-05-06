@@ -8,3 +8,8 @@ variable "region" {
   type        = string
   default     = "europe-central2"
 }
+
+variable "db_password" {
+  description = "Test123!"
+  type        = string
+}

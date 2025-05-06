@@ -75,9 +75,7 @@
           "limit": 100,
           "matchAny": true,
           "queryType": "annotations",
-          "tags": [
-            "test_start"
-          ],
+          "tags": ["test_start"],
           "type": "tags"
         }
       },
@@ -95,9 +93,7 @@
           "matchAny": true,
           "queryType": "annotations",
           "refId": "Anno",
-          "tags": [
-            "test_end"
-          ],
+          "tags": ["test_end"],
           "type": "tags"
         }
       },
@@ -115,9 +111,7 @@
           "matchAny": true,
           "queryType": "annotations",
           "refId": "Anno",
-          "tags": [
-            "test_crash"
-          ],
+          "tags": ["test_crash"],
           "type": "tags"
         }
       }
@@ -213,10 +207,7 @@
               {
                 "id": "custom.lineStyle",
                 "value": {
-                  "dash": [
-                    10,
-                    10
-                  ],
+                  "dash": [10, 10],
                   "fill": "dash"
                 }
               },
@@ -254,10 +245,7 @@
               {
                 "id": "custom.lineStyle",
                 "value": {
-                  "dash": [
-                    10,
-                    10
-                  ],
+                  "dash": [10, 10],
                   "fill": "dash"
                 }
               }
@@ -1345,10 +1333,7 @@
               {
                 "id": "custom.lineStyle",
                 "value": {
-                  "dash": [
-                    10,
-                    10
-                  ],
+                  "dash": [10, 10],
                   "fill": "dash"
                 }
               }
@@ -1370,10 +1355,7 @@
               {
                 "id": "custom.lineStyle",
                 "value": {
-                  "dash": [
-                    10,
-                    10
-                  ],
+                  "dash": [10, 10],
                   "fill": "dash"
                 }
               }
@@ -1388,10 +1370,7 @@
               {
                 "id": "custom.lineStyle",
                 "value": {
-                  "dash": [
-                    10,
-                    10
-                  ],
+                  "dash": [10, 10],
                   "fill": "dash"
                 }
               },
@@ -1598,9 +1577,7 @@
           "countRows": false,
           "enablePagination": true,
           "fields": "",
-          "reducer": [
-            "sum"
-          ],
+          "reducer": ["sum"],
           "show": false
         },
         "frameIndex": 2,
@@ -1675,27 +1652,19 @@
           "options": {
             "fields": {
               "Value #B": {
-                "aggregations": [
-                  "min"
-                ],
+                "aggregations": ["min"],
                 "operation": "aggregate"
               },
               "Value #C": {
-                "aggregations": [
-                  "max"
-                ],
+                "aggregations": ["max"],
                 "operation": "aggregate"
               },
               "Value #D": {
-                "aggregations": [
-                  "mean"
-                ],
+                "aggregations": ["mean"],
                 "operation": "aggregate"
               },
               "Value #E": {
-                "aggregations": [
-                  "mean"
-                ],
+                "aggregations": ["mean"],
                 "operation": "aggregate"
               },
               "method": {
@@ -1840,9 +1809,7 @@
           "countRows": false,
           "enablePagination": true,
           "fields": "",
-          "reducer": [
-            "sum"
-          ],
+          "reducer": ["sum"],
           "show": false
         },
         "frameIndex": 2,
@@ -1875,10 +1842,7 @@
         {
           "id": "labelsToFields",
           "options": {
-            "keepLabels": [
-              "__name__",
-              "check"
-            ],
+            "keepLabels": ["__name__", "check"],
             "mode": "columns"
           }
         },
@@ -1887,9 +1851,7 @@
           "options": {
             "fields": {
               "Value": {
-                "aggregations": [
-                  "mean"
-                ],
+                "aggregations": ["mean"],
                 "operation": "aggregate"
               },
               "check": {
@@ -1897,10 +1859,7 @@
                 "operation": "groupby"
               },
               "k6_checks_rate": {
-                "aggregations": [
-                  "sum",
-                  "count"
-                ],
+                "aggregations": ["sum", "count"],
                 "operation": "aggregate"
               }
             }
@@ -2048,10 +2007,7 @@
   ],
   "refresh": "",
   "schemaVersion": 41,
-  "tags": [
-    "prometheus",
-    "k6"
-  ],
+  "tags": ["prometheus", "k6"],
   "templating": {
     "list": [
       {
