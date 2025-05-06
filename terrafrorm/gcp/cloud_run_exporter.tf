@@ -1,5 +1,5 @@
 resource "google_cloud_run_v2_service" "exporter" {
-  name     = "postgres-exporter"
+  name     = "praca-magisterska-postgres-exporter"
   location = var.region
 
   template {
@@ -11,7 +11,7 @@ resource "google_cloud_run_v2_service" "exporter" {
       }
       env {
         name  = "DATA_SOURCE_NAME"
-        value = "postgresql://postgres:${var.db_password}@/postgres?host=/cloudsql/${google_sql_database_instance.postgres.connection_name}&sslmode=disable"
+        value = "postgresql://postgres:${var.GOOGLE_PASSWORD}@/postgres?host=/cloudsql/${google_sql_database_instance.postgres.connection_name}&sslmode=disable"
       }
     }
 
@@ -28,7 +28,7 @@ resource "google_cloud_run_v2_service" "exporter" {
   }
 
   traffic {
-    type = "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
+    type    = "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
     percent = 100
   }
 }

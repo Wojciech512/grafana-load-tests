@@ -1,5 +1,5 @@
 resource "google_sql_database_instance" "postgres" {
-  name             = "terraform-db"
+  name             = "praca-magisterska-db"
   database_version = "POSTGRES_16"
   region           = var.region
   settings {
@@ -7,9 +7,8 @@ resource "google_sql_database_instance" "postgres" {
   }
 }
 
-
 resource "google_sql_user" "postgres_user" {
   name     = "postgres"
   instance = google_sql_database_instance.postgres.name
-  password = var.db_password
+  password = var.GOOGLE_PASSWORD
 }

@@ -1,15 +1,63 @@
 variable "project_id" {
-  description = "atlantean-yeti-454021-b3"
-  type        = string
+  type    = string
+  default = "atlantean-yeti-454021-b3"
+}
+
+variable "repository_id" {
+  type    = string
+  default = "praca-magisterska-artifact-registry"
 }
 
 variable "region" {
-  description = "Region Google Cloud"
-  type        = string
-  default     = "europe-central2"
+  type    = string
+  default = "europe-central2"
 }
 
-variable "db_password" {
-  description = "Test123!"
-  type        = string
+variable "DEBUG" {
+  type = bool
 }
+
+variable "ALLOWED_HOSTS" {
+  type = string
+}
+
+variable "EMAIL_HOST_USER" {
+  type      = string
+  sensitive = true
+}
+
+variable "EMAIL_HOST_PASSWORD" {
+  type      = string
+  sensitive = true
+}
+
+variable "SECRET_KEY" {
+  type      = string
+  sensitive = true
+}
+
+variable "GOOGLE_NAME" {
+  type      = string
+  sensitive = true
+}
+
+variable "GOOGLE_USER" {
+  type      = string
+  sensitive = true
+}
+
+variable "GOOGLE_PASSWORD" {
+  type      = string
+  sensitive = true
+}
+
+variable "GOOGLE_HOST" {
+  type      = string
+  sensitive = true
+}
+
+variable "GOOGLE_PORT" {
+  type      = string
+  sensitive = true
+}
+

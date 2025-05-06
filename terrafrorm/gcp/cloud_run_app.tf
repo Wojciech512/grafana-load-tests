@@ -1,18 +1,58 @@
 resource "google_cloud_run_v2_service" "django" {
-  name     = "django-app"
+  name     = "praca-magisterska-django-app"
   location = var.region
 
   template {
     containers {
-      image = "${var.region}-docker.pkg.dev/${var.project_id}/my-registry/django-app:latest"
+      image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.repository_id}/django-app:latest"
 
       ports {
         container_port = 8000
       }
 
       env {
-        name  = "DATABASE_URL"
-        value = "postgresql://postgres:${var.db_password}@/postgres?host=/cloudsql/${google_sql_database_instance.postgres.connection_name}&sslmode=disable"
+        name  = "DEBUG"
+        value = var.DEBUG
+      }
+
+      env {
+        name  = "ALLOWED_HOSTS"
+        value = var.ALLOWED_HOSTS
+      }
+
+      env {
+        name  = "EMAIL_HOST_USER"
+        value = var.EMAIL_HOST_USER
+      }
+
+      env {
+        name  = "SECRET_KEY"
+        value = var.SECRET_KEY
+      }
+
+      env {
+        name  = "GOOGLE_NAME"
+        value = var.GOOGLE_NAME
+      }
+
+      env {
+        name  = "GOOGLE_USER"
+        value = var.GOOGLE_USER
+      }
+
+      env {
+        name  = "GOOGLE_PASSWORD"
+        value = var.GOOGLE_PASSWORD
+      }
+
+      env {
+        name  = "GOOGLE_HOST"
+        value = var.GOOGLE_HOST
+      }
+
+      env {
+        name  = "GOOGLE_PORT"
+        value = var.GOOGLE_PORT
       }
     }
 
@@ -30,7 +70,7 @@ resource "google_cloud_run_v2_service" "django" {
   }
 
   traffic {
-    type = "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
+    type    = "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
     percent = 100
   }
 }
