@@ -56,43 +56,6 @@ services:
     ports:
       - "9187:9187"
 
-#  log_poller:
-#    build:
-#      context: ./logs/logs-poller
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8002:8002"
-#    container_name: log_poller
-#    environment:
-#      - LOG_ENDPOINT=http://host.docker.internal:8000/logs/
-#    volumes:
-#      - logs:/var/log
-#    healthcheck:
-#      test: ["CMD-SHELL", "curl -f http://localhost:8002/health || exit 1"]
-#      interval: 15s
-#      timeout: 5s
-#      retries: 3
-#
-#  fluentbit:
-#    image: fluent/fluent-bit:latest
-#    container_name: fluentbit
-#    volumes:
-#      - ./logs/fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro
-#      - ./logs/fluent-bit/parsers.conf:/fluent-bit/etc/parsers.conf:ro
-#      - logs:/var/log
-#    depends_on:
-#      - log_poller
-#
-#  loki:
-#    image: grafana/loki:2.8.2
-#    container_name: loki
-#    ports:
-#      - "3100:3100"
-#    volumes:
-#      - loki_data:/loki
-#    depends_on:
-#      - fluentbit
-
   k6-base: &common
     build:
       context: ./load-tests
