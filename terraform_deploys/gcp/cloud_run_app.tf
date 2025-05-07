@@ -1,4 +1,4 @@
-resource "google_cloud_run_v2_service" "django" {
+resource "google_cloud_run_v2_service" "django_public" {
   name     = "praca-magisterska-django-app"
   location = var.region
 
@@ -26,33 +26,43 @@ resource "google_cloud_run_v2_service" "django" {
       }
 
       env {
+        name  = "EMAIL_HOST_PASSWORD"
+        value = var.EMAIL_HOST_PASSWORD
+      }
+
+      env {
         name  = "SECRET_KEY"
         value = var.SECRET_KEY
       }
 
       env {
-        name  = "GOOGLE_NAME"
-        value = var.GOOGLE_NAME
+        name  = "CSRF_TRUSTED_ORIGINS"
+        value = var.CSRF_TRUSTED_ORIGINS
       }
 
       env {
-        name  = "GOOGLE_USER"
-        value = var.GOOGLE_USER
+        name  = "GOOGLE_POSTGRESQL_NAME"
+        value = var.GOOGLE_POSTGRESQL_NAME
       }
 
       env {
-        name  = "GOOGLE_PASSWORD"
-        value = var.GOOGLE_PASSWORD
+        name  = "GOOGLE_POSTGRESQL_USERNAME"
+        value = var.GOOGLE_POSTGRESQL_USERNAME
       }
 
       env {
-        name  = "GOOGLE_HOST"
-        value = var.GOOGLE_HOST
+        name  = "GOOGLE_POSTGRESQL_PASSWORD"
+        value = var.GOOGLE_POSTGRESQL_PASSWORD
       }
 
       env {
-        name  = "GOOGLE_PORT"
-        value = var.GOOGLE_PORT
+        name  = "GOOGLE_POSTGRESQL_HOST"
+        value = var.GOOGLE_POSTGRESQL_HOST
+      }
+
+      env {
+        name  = "GOOGLE_POSTGRESQL_PORT"
+        value = var.GOOGLE_POSTGRESQL_PORT
       }
     }
 
@@ -76,8 +86,8 @@ resource "google_cloud_run_v2_service" "django" {
 }
 
 resource "google_cloud_run_service_iam_member" "django_invoker" {
-  service  = google_cloud_run_v2_service.django.name
-  location = google_cloud_run_v2_service.django.location
+  service  = google_cloud_run_v2_service.django_public.name
+  location = var.region
   role     = "roles/run.invoker"
   member   = "allUsers"
 }

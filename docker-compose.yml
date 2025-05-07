@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 #2.1 Azure Monitor
 #Azure Monitor automatycznie gromadzi platformowe metryki (CPU, pamięć, dysk, sieć, instancje, autoscaling) bez dodatkowych opłat za ich zbieranie i wizualizację w Metrics Explorer
@@ -47,12 +47,44 @@ services:
       - RUN_ID=${RUN_ID:-$(date +%s)}
     depends_on:
       - prometheus
-
-  postgres_exporter:
-    image: wrouesnel/postgres_exporter
-    container_name: postgres_exporter
+  #TODO dane do połączenia na podstawie zmiennych
+  gcp-sql-proxy:
+    image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.15.2-alpine
+    container_name: gcp-sql-proxy
     environment:
-      DATA_SOURCE_NAME: "postgresql://postgres:postgres@host.docker.internal:5432/postgres?sslmode=disable"
+      - GCP_PROJECT
+      - GCP_REGION
+      - GCP_INSTANCE
+    command:
+      - "/cloud-sql-proxy"
+      - "--debug"
+      - "--address=0.0.0.0"
+      - "--port=5432"
+      - "--credentials-file=/secrets/gcp-credentials.json"
+      - "atlantean-yeti-454021-b3:europe-central2:praca-magisterska-db"
+      - "--prometheus"
+    volumes:
+      - ./terraform_deploys/gcp/gcp-credentials.json:/secrets/gcp-credentials.json:ro
+    ports:
+      - "5432:5432"
+      - "5433:5433"
+      - "9104:9104"
+
+  #TODO zabezpieczyć hasła
+  #  postgres_exporter:
+  #    image: wrouesnel/postgres_exporter
+  #    container_name: postgres_exporter
+  #    environment:
+  #      DATA_SOURCE_NAME: "postgresql://postgres:postgres@host.docker.internal:5432/postgres?sslmode=disable"
+  #    ports:
+  #      - "9187:9187"
+
+  postgres_exporter-proxy:
+    image: wrouesnel/postgres_exporter
+    depends_on:
+      - gcp-sql-proxy
+    environment:
+      DATA_SOURCE_NAME: "postgresql://postgres:postgres@gcp-sql-proxy:5433/postgres?sslmode=disable"
     ports:
       - "9187:9187"
 
@@ -66,7 +98,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '4.0'
+          cpus: "4.0"
           memory: 4G
     environment:
       - K6_PROMETHEUS_RW_SERVER_URL=http://host.docker.internal:9090/api/v1/write

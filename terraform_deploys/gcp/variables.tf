@@ -3,9 +3,19 @@ variable "project_id" {
   default = "atlantean-yeti-454021-b3"
 }
 
+variable "project_name" {
+  type    = string
+  default = "praca magisterska projekt"
+}
+
 variable "repository_id" {
   type    = string
   default = "praca-magisterska-artifact-registry"
+}
+
+variable "db_id" {
+  type    = string
+  default = "praca-magisterska-db"
 }
 
 variable "region" {
@@ -36,27 +46,32 @@ variable "SECRET_KEY" {
   sensitive = true
 }
 
-variable "GOOGLE_NAME" {
+variable "CSRF_TRUSTED_ORIGINS" {
   type      = string
   sensitive = true
 }
 
-variable "GOOGLE_USER" {
+variable "GOOGLE_POSTGRESQL_NAME" {
   type      = string
   sensitive = true
 }
 
-variable "GOOGLE_PASSWORD" {
+variable "GOOGLE_POSTGRESQL_USERNAME" {
   type      = string
   sensitive = true
 }
 
-variable "GOOGLE_HOST" {
+variable "GOOGLE_POSTGRESQL_PASSWORD" {
   type      = string
   sensitive = true
 }
 
-variable "GOOGLE_PORT" {
+variable "GOOGLE_POSTGRESQL_HOST" {
+  type      = string
+  sensitive = true
+}
+
+variable "GOOGLE_POSTGRESQL_PORT" {
   type      = string
   sensitive = true
 }

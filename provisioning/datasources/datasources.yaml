@@ -1,5 +1,6 @@
 apiVersion: 1
 datasources:
+#  TODO lokalny i gcp Prometheus
   - name: Prometheus
     uid: DS_PROMETHEUS-LOCAL
     type: prometheus
