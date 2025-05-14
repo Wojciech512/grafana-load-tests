@@ -10,7 +10,7 @@ version: "3.9"
 #Cloud Monitoring (dawniej Stackdriver) oferuje bibliotekę wbudowanych dashboardów i widżetów do szybkiego wyświetlania metryk CPU, pamięci, ruchu sieciowego i autoscalingu bez konieczności instalacji eksportera
 #Google Cloud. Darmowy próg obejmuje 1 mln zwróconych szeregów czasowych miesięcznie, a kolejne kosztują $0.50 za milion zwróconych serii, co przekłada się na około $3.82 miesięcznie dla typowego zestawu 10 metryk śledzonych co 5 minut przez 30 dni
 #Google Cloud.
-
+# TODO pełne metryki django zweryfikować
 # TODO przygotować monitoring na google cloud i azure (CPU, RAM, sieć, autoscaling)
 # TODO eksporter metryk bazy danych, czy warto?
 # TODO skonfigurować pobieranie danych z azure i google cloud w prometheus ( wkażdym z dashboardów musi być jasno określony dostawca w dropdownie)
@@ -47,44 +47,31 @@ services:
       - RUN_ID=${RUN_ID:-$(date +%s)}
     depends_on:
       - prometheus
-  #TODO dane do połączenia na podstawie zmiennych
+
   gcp-sql-proxy:
     image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.15.2-alpine
     container_name: gcp-sql-proxy
-    environment:
-      - GCP_PROJECT
-      - GCP_REGION
-      - GCP_INSTANCE
     command:
-      - "/cloud-sql-proxy"
       - "--debug"
       - "--address=0.0.0.0"
       - "--port=5432"
       - "--credentials-file=/secrets/gcp-credentials.json"
-      - "atlantean-yeti-454021-b3:europe-central2:praca-magisterska-db"
+      - "${GCP_PROJECT_ID}:${GCP_REGION}:${GCP_PROJECT_DB_NAME}"
       - "--prometheus"
     volumes:
       - ./terraform_deploys/gcp/gcp-credentials.json:/secrets/gcp-credentials.json:ro
     ports:
       - "5432:5432"
-      - "5433:5433"
       - "9104:9104"
-
-  #TODO zabezpieczyć hasła
-  #  postgres_exporter:
-  #    image: wrouesnel/postgres_exporter
-  #    container_name: postgres_exporter
-  #    environment:
-  #      DATA_SOURCE_NAME: "postgresql://postgres:postgres@host.docker.internal:5432/postgres?sslmode=disable"
-  #    ports:
-  #      - "9187:9187"
 
   postgres_exporter-proxy:
     image: wrouesnel/postgres_exporter
     depends_on:
       - gcp-sql-proxy
+    env_file:
+      - .env
     environment:
-      DATA_SOURCE_NAME: "postgresql://postgres:postgres@gcp-sql-proxy:5433/postgres?sslmode=disable"
+      DATA_SOURCE_NAME: "postgresql://${GOOGLE_POSTGRESQL_USERNAME}:${GOOGLE_POSTGRESQL_PASSWORD}@gcp-sql-proxy:5432/${GOOGLE_POSTGRESQL_NAME}?sslmode=disable"
     ports:
       - "9187:9187"
 

@@ -8,34 +8,23 @@ scrape_configs:
       - targets:
           - "localhost:9090"
 
-  - job_name: "django-local"
-    static_configs:
-      - targets:
-          - "host.docker.internal:8000"
-        labels:
-          app: "django-local"
-          service: "django-local"
-    relabel_configs:
-      - target_label: provider
-        replacement: "django-local"
-
-  - job_name: "postgres-local"
+  - job_name: "postgres-gcp"
     static_configs:
       - targets:
           - "host.docker.internal:9187"
         labels:
-          app: "postgres-local"
-          service: "postgres-local"
+          app: "postgres-gcp"
+          service: "postgres-gcp"
     metric_relabel_configs:
       - target_label: provider
-        replacement: "postgres-local"
+        replacement: "postgres-gcp"
 
   - job_name: "django-gcp"
     scheme: https
     metrics_path: /metrics
     static_configs:
       - targets:
-          - "praca-magisterska-django-app-416944886717.europe-central2.run.app"
+          - "praca-magisterska-django-app-27187004716.europe-central2.run.app"
         labels:
           app: "django-gcp"
           service: "django-gcp"
@@ -44,18 +33,3 @@ scrape_configs:
     metric_relabel_configs:
       - target_label: provider
         replacement: "django-gcp"
-
-  - job_name: "postgres-gcp"
-    scheme: https
-    metrics_path: /metrics
-    static_configs:
-      - targets:
-          - "praca-magisterska-postgres-exporter-416944886717.europe-central2.run.app"
-        labels:
-          app: "postgres-gcp"
-          service: "postgres-gcp"
-    tls_config:
-      insecure_skip_verify: true
-    metric_relabel_configs:
-      - target_label: provider
-        replacement: "postgres-gcp"

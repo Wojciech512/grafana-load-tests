@@ -1,3 +1,7 @@
 .env
-terraform_deploys/gcp/gcp-credentials.json
-terraform_deploys/gcp/cloud_env.tfvars
+terraform_deploys/**/*.json
+terraform_deploys/**/*.tfvars
+terraform_deploys/**/.terraform
+terraform_deploys/**/.terraform.lock.hcl
+terraform_deploys/**/terraform.tfstate
+terraform_deploys/**/terraform.tfstate.backup

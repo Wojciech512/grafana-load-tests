@@ -1,11 +1,16 @@
 variable "project_id" {
   type    = string
-  default = "atlantean-yeti-454021-b3"
+  default = "praca-magisterska-proj-gcp-2"
+}
+
+variable "project_region" {
+  type    = string
+  default = "europe-central2"
 }
 
 variable "project_name" {
   type    = string
-  default = "praca magisterska projekt"
+  default = "praca-magisterska-projekt-gcp"
 }
 
 variable "repository_id" {
@@ -13,14 +18,9 @@ variable "repository_id" {
   default = "praca-magisterska-artifact-registry"
 }
 
-variable "db_id" {
+variable "billing_account" {
   type    = string
-  default = "praca-magisterska-db"
-}
-
-variable "region" {
-  type    = string
-  default = "europe-central2"
+  default = "015886-0592BC-AB7956"
 }
 
 variable "DEBUG" {
@@ -65,14 +65,3 @@ variable "GOOGLE_POSTGRESQL_PASSWORD" {
   type      = string
   sensitive = true
 }
-
-variable "GOOGLE_POSTGRESQL_HOST" {
-  type      = string
-  sensitive = true
-}
-
-variable "GOOGLE_POSTGRESQL_PORT" {
-  type      = string
-  sensitive = true
-}
-

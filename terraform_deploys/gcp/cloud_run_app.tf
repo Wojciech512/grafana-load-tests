@@ -1,13 +1,27 @@
 resource "google_cloud_run_v2_service" "django_public" {
-  name     = "praca-magisterska-django-app"
-  location = var.region
+  name                = "praca-magisterska-django-app"
+  location            = var.project_region
+  deletion_protection = false
+  project             = google_project.this.project_id
+
+  depends_on = [
+    google_project_service.billing_api,
+    google_project_service.enabled_apis["run.googleapis.com"],
+  ]
 
   template {
+    service_account = google_service_account.proxy.email
+
     containers {
-      image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.repository_id}/django-app:latest"
+      image = "${var.project_region}-docker.pkg.dev/${var.project_id}/${var.repository_id}/django-app:latest"
 
       ports {
         container_port = 8000
+      }
+
+      volume_mounts {
+        name       = "cloudsql"
+        mount_path = "/cloudsql"
       }
 
       env {
@@ -57,19 +71,16 @@ resource "google_cloud_run_v2_service" "django_public" {
 
       env {
         name  = "GOOGLE_POSTGRESQL_HOST"
-        value = var.GOOGLE_POSTGRESQL_HOST
-      }
-
-      env {
-        name  = "GOOGLE_POSTGRESQL_PORT"
-        value = var.GOOGLE_POSTGRESQL_PORT
+        value = "/cloudsql/${google_sql_database_instance.postgres.connection_name}"
       }
     }
 
     volumes {
       name = "cloudsql"
       cloud_sql_instance {
-        instances = [google_sql_database_instance.postgres.connection_name]
+        instances = [
+          google_sql_database_instance.postgres.connection_name,
+        ]
       }
     }
 
@@ -86,8 +97,9 @@ resource "google_cloud_run_v2_service" "django_public" {
 }
 
 resource "google_cloud_run_service_iam_member" "django_invoker" {
+  location = var.project_region
+  project  = google_project.this.project_id
   service  = google_cloud_run_v2_service.django_public.name
-  location = var.region
   role     = "roles/run.invoker"
   member   = "allUsers"
 }

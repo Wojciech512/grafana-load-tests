@@ -1,6 +1,12 @@
-resource "google_artifact_registry_repository" "docker_registry" {
+resource "google_artifact_registry_repository" "docker" {
   provider      = google
-  location      = var.region
-  repository_id = var.repository_id
+  project       = google_project.this.project_id
+  location      = var.project_region
+  repository_id = "praca-magisterska-artifact-registry"
   format        = "DOCKER"
+
+  depends_on = [
+    google_project_service.billing_api,
+    google_project_service.enabled_apis["artifactregistry.googleapis.com"]
+  ]
 }
