@@ -10,12 +10,14 @@ version: "3.9"
 #Cloud Monitoring (dawniej Stackdriver) oferuje bibliotekę wbudowanych dashboardów i widżetów do szybkiego wyświetlania metryk CPU, pamięci, ruchu sieciowego i autoscalingu bez konieczności instalacji eksportera
 #Google Cloud. Darmowy próg obejmuje 1 mln zwróconych szeregów czasowych miesięcznie, a kolejne kosztują $0.50 za milion zwróconych serii, co przekłada się na około $3.82 miesięcznie dla typowego zestawu 10 metryk śledzonych co 5 minut przez 30 dni
 #Google Cloud.
-# TODO pełne metryki django zweryfikować
-# TODO przygotować monitoring na google cloud i azure (CPU, RAM, sieć, autoscaling)
-# TODO eksporter metryk bazy danych, czy warto?
-# TODO skonfigurować pobieranie danych z azure i google cloud w prometheus ( wkażdym z dashboardów musi być jasno określony dostawca w dropdownie)
-# TODO uruchomić całośc na google cloud
-# TODO uruchomić całośc na azure
+#TODO DODAĆ ADNOTACJE DO METRYK KONTENERA? NIE LEPIEJ WYPISYWAĆ PRZEDZIAŁY CZASOWE I NA PODSTAWIE TEGO FILTROWAĆ?
+#TODO uruchomić testy i zweryfikować jak zbieraja się dane oraz czy widać na każdym rozpoczęcie i zakończenie testów
+#TODO przygotować 3x terraform dla gcp jak najmniejsze koszty
+#TODO przygotować z testy nastawić się na jak najmniejsze koszty
+#TODO przygotować 3x terraform dla azure jak najmniejsze koszty
+#TODO przygotować monitoring na azure (CPU, RAM, sieć, autoscaling) wdrożyć identyczne wykresy dla azure
+
+#TODO USTALIĆ KONKRETNE WERSJE ZAMIAST :LATEST
 
 services:
   prometheus:
@@ -29,6 +31,31 @@ services:
       - prometheus_data:/prometheus
     ports:
       - "9090:9090"
+
+  stackdriver-exporter-gcp:
+    image: quay.io/prometheuscommunity/stackdriver-exporter:latest
+    container_name: sd-exporter
+    env_file:
+      - .env
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/etc/stackdriver/gcp-credentials.json
+    command:
+      - --google.project-id=${GCP_PROJECT_ID}
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/cpu/utilizations
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/memory/usage
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/network/received_bytes_count
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/network/sent_bytes_count
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/instance_count
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/startup_latencies
+      - --monitoring.metrics-prefixes=run.googleapis.com/request_count
+      - --monitoring.metrics-prefixes=run.googleapis.com/request_latencies
+      - --monitoring.metrics-interval=1m
+      - --monitoring.metrics-offset=1m
+      - --web.listen-address=:8080
+    volumes:
+      - ./terraform_deploys/gcp/gcp-credentials.json:/etc/stackdriver/gcp-credentials.json:ro
+    ports:
+      - "8080:8080"
 
   grafana:
     image: grafana/grafana:latest
@@ -99,7 +126,7 @@ services:
   k6-gcp:
     extends: { service: k6-base }
     environment:
-      - BASE_URL=https://service.a.run.app
+      - BASE_URL=https://praca-magisterska-django-app-330626129759.europe-central2.run.app
       - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
 
   k6-azure:

@@ -21,10 +21,10 @@ scrape_configs:
 
   - job_name: "django-gcp"
     scheme: https
-    metrics_path: /metrics
+    metrics_path: "/metrics"
     static_configs:
       - targets:
-          - "praca-magisterska-django-app-27187004716.europe-central2.run.app"
+          - "praca-magisterska-django-app-330626129759.europe-central2.run.app"
         labels:
           app: "django-gcp"
           service: "django-gcp"
@@ -33,3 +33,12 @@ scrape_configs:
     metric_relabel_configs:
       - target_label: provider
         replacement: "django-gcp"
+
+  - job_name: "stackdriver_exporter-gcp"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets:
+          - "host.docker.internal:8080"
+        labels:
+          app: "stackdriver_exporter-gcp"
+          service: "stackdriver_exporter-gcp"

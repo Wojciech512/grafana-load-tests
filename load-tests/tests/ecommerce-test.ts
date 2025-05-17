@@ -95,7 +95,7 @@ export function userJourney() {
     sleep(1);
 
     /* 3. produkt */
-    res = http.get(`${BASE}/product/electronics-produkt-1-6371/`);
+    res = http.get(`${BASE}/product/electronics-produkt-1-41991/`);
     check(res, { product: (r) => r.status === 200 });
     sleep(1);
 
