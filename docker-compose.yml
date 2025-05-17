@@ -16,7 +16,7 @@ version: "3.9"
 # TODO skonfigurować pobieranie danych z azure i google cloud w prometheus ( wkażdym z dashboardów musi być jasno określony dostawca w dropdownie)
 # TODO uruchomić całośc na google cloud
 # TODO uruchomić całośc na azure
-
+# TODO USTALIĆ KONKRETNE WERSJE ZAMIAST :LATEST
 services:
   prometheus:
     image: prom/prometheus:latest
@@ -29,6 +29,31 @@ services:
       - prometheus_data:/prometheus
     ports:
       - "9090:9090"
+
+  stackdriver-exporter-gcp:
+    image: quay.io/prometheuscommunity/stackdriver-exporter:latest
+    container_name: sd-exporter
+    env_file:
+      - .env
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/etc/stackdriver/gcp-credentials.json
+    command:
+      - "--google.project-id=${GCP_PROJECT_ID}"
+      - "--monitoring.metrics-prefixes=compute.googleapis.com/instance/cpu/utilization"
+      - "--monitoring.metrics-prefixes=compute.googleapis.com/instance/disk/read_bytes_count"
+      - "--monitoring.metrics-prefixes=compute.googleapis.com/instance/disk/write_bytes_count"
+      - "--monitoring.metrics-prefixes=run.googleapis.com/container/cpu/utilization"
+      - "--monitoring.metrics-prefixes=run.googleapis.com/container/memory/usage"
+      - "--monitoring.metrics-prefixes=cloudsql.googleapis.com/database/cpu/utilization"
+      - "--monitoring.metrics-prefixes=cloudsql.googleapis.com/database/active_connections"
+      - "--monitoring.metrics-prefixes=cloudsql.googleapis.com/database/network/sent_bytes_count"
+      - "--monitoring.metrics-interval=60s"
+      - "--web.listen-address=:8080"
+    volumes:
+      - ./stackdriver-config.yml:/etc/stackdriver/config.yml:ro
+      - ./terraform_deploys/gcp/gcp-credentials.json:/etc/stackdriver/gcp-credentials.json:ro
+    ports:
+      - "8080:8080"
 
   grafana:
     image: grafana/grafana:latest
@@ -99,7 +124,7 @@ services:
   k6-gcp:
     extends: { service: k6-base }
     environment:
-      - BASE_URL=https://service.a.run.app
+      - BASE_URL=https://praca-magisterska-django-app-202067139645.europe-central2.run.app
       - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
 
   k6-azure:

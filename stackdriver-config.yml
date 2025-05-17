@@ -1,0 +1,4 @@
+metrics:
+  - type: "compute.googleapis.com/instance/cpu/utilization"
+  - type: "compute.googleapis.com/instance/disk/read_bytes_count"
+  - type: "monitoring.googleapis.com/billing/cost"
