@@ -137,6 +137,7 @@ export function userJourney() {
 export const options = {
   thresholds: {
     // RED – Requests, Errors, Duration
+    discardResponseBodies: true,
     http_reqs: ["rate>=30"], // zapewnienie min. 30 RPS
     http_req_failed: ["rate<=0.01"], // max 1% błędów
     http_req_duration: ["p(95)<800", "p(99)<1500"], // p95 < 800 ms, p99 < 1.5 s
@@ -160,7 +161,6 @@ export const options = {
     http_req_tls_handshaking: ["avg<200"], // handshake TLS < 200 ms
   },
   scenarios: {
-    /* 1) Cold-start / smoke – 1 iteracja po 15 min bezruchu */
     cold_start: {
       executor: "per-vu-iterations",
       vus: 1,
@@ -168,26 +168,20 @@ export const options = {
       startTime: "0s",
       exec: "userJourney",
     },
-
-    /* 2) Steady-load – 30 RPS przez 30 min (baseline) */
     steady_load: {
       executor: "constant-arrival-rate",
       rate: 30,
       timeUnit: "1s",
       duration: "30m",
       preAllocatedVUs: 10,
-      maxVUs: 100,
+      maxVUs: 50,
       startTime: "1m",
       exec: "userJourney",
     },
-
-    /* 3) Stress / ramp-up – rosnący ruch do 200 RPS */
     stress: {
       executor: "ramping-arrival-rate",
       startRate: 20,
       timeUnit: "1s",
-      preAllocatedVUs: 20,
-      maxVUs: 300,
       stages: [
         { target: 50, duration: "5m" },
         { target: 100, duration: "5m" },
@@ -195,11 +189,11 @@ export const options = {
         { target: 200, duration: "5m" },
         { target: 0, duration: "2m" },
       ],
+      preAllocatedVUs: 20,
+      maxVUs: 100,
       startTime: "35m",
       exec: "userJourney",
     },
-
-    /* 4) Spike – 0 → 200 RPS w 10 s, 5 min hold */
     spike: {
       executor: "ramping-arrival-rate",
       startRate: 0,
@@ -210,19 +204,17 @@ export const options = {
         { target: 0, duration: "30s" },
       ],
       preAllocatedVUs: 20,
-      maxVUs: 500,
+      maxVUs: 150,
       startTime: "55m",
       exec: "userJourney",
     },
-
-    /* 5) Soak / endurance – 20 RPS przez 8 h */
     soak: {
       executor: "constant-arrival-rate",
       rate: 20,
       timeUnit: "1s",
-      duration: "8h",
-      preAllocatedVUs: 25,
-      maxVUs: 200,
+      duration: "2h",
+      preAllocatedVUs: 10,
+      maxVUs: 50,
       startTime: "61m",
       exec: "userJourney",
     },

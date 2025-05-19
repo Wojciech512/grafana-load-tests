@@ -12,9 +12,9 @@ version: "3.9"
 #Google Cloud.
 #TODO DODAĆ ADNOTACJE DO METRYK KONTENERA? NIE LEPIEJ WYPISYWAĆ PRZEDZIAŁY CZASOWE I NA PODSTAWIE TEGO FILTROWAĆ?
 #TODO uruchomić testy i zweryfikować jak zbieraja się dane oraz czy widać na każdym rozpoczęcie i zakończenie testów
-#TODO przygotować 3x terraform dla gcp jak najmniejsze koszty
+#TODO przygotować 3x terraform cloud run + clod sql dla gcp jak najmniejsze koszty
 #TODO przygotować z testy nastawić się na jak najmniejsze koszty
-#TODO przygotować 3x terraform dla azure jak najmniejsze koszty
+#TODO przygotować 3x terraform app service + flex db dla azure jak najmniejsze koszty
 #TODO przygotować monitoring na azure (CPU, RAM, sieć, autoscaling) wdrożyć identyczne wykresy dla azure
 
 #TODO USTALIĆ KONKRETNE WERSJE ZAMIAST :LATEST
