@@ -12,9 +12,9 @@ version: "3.9"
 #Google Cloud.
 #TODO DODAĆ ADNOTACJE DO METRYK KONTENERA? NIE LEPIEJ WYPISYWAĆ PRZEDZIAŁY CZASOWE I NA PODSTAWIE TEGO FILTROWAĆ?
 #TODO uruchomić testy i zweryfikować jak zbieraja się dane oraz czy widać na każdym rozpoczęcie i zakończenie testów
-#TODO przygotować 3x terraform dla gcp jak najmniejsze koszty
+#TODO przygotować 3x terraform cloud run + clod sql dla gcp jak najmniejsze koszty
 #TODO przygotować z testy nastawić się na jak najmniejsze koszty
-#TODO przygotować 3x terraform dla azure jak najmniejsze koszty
+#TODO przygotować 3x terraform app service + flex db dla azure jak najmniejsze koszty
 #TODO przygotować monitoring na azure (CPU, RAM, sieć, autoscaling) wdrożyć identyczne wykresy dla azure
 
 #TODO USTALIĆ KONKRETNE WERSJE ZAMIAST :LATEST
@@ -41,14 +41,14 @@ services:
       - GOOGLE_APPLICATION_CREDENTIALS=/etc/stackdriver/gcp-credentials.json
     command:
       - --google.project-id=${GCP_PROJECT_ID}
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/cpu/usage
       - --monitoring.metrics-prefixes=run.googleapis.com/container/cpu/utilizations
       - --monitoring.metrics-prefixes=run.googleapis.com/container/memory/usage
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/memory/utilizations
       - --monitoring.metrics-prefixes=run.googleapis.com/container/network/received_bytes_count
       - --monitoring.metrics-prefixes=run.googleapis.com/container/network/sent_bytes_count
       - --monitoring.metrics-prefixes=run.googleapis.com/container/instance_count
       - --monitoring.metrics-prefixes=run.googleapis.com/container/startup_latencies
-      - --monitoring.metrics-prefixes=run.googleapis.com/request_count
-      - --monitoring.metrics-prefixes=run.googleapis.com/request_latencies
       - --monitoring.metrics-interval=1m
       - --monitoring.metrics-offset=1m
       - --web.listen-address=:8080
@@ -123,23 +123,33 @@ services:
       - ./load-tests/tests/:/tests
     profiles: ["loadtests"]
 
-  k6-gcp:
+  #TODO 2x 2x dla różnych url aplikacji
+  #TODO upewnić się czy serwisy dadzą radę pracować równocześnie 3x, sprawdizć podzespoły
+  #TODO dodać tagi rozróżniające źródła w prometheus
+#  todo ZROBIĆ 2 RUNY KAŻDEGO Z TESTÓW RÓWNOLEGLE??? ZAPYTAĆ SIĘ
+  k6-gcp-low:
     extends: { service: k6-base }
     environment:
-      - BASE_URL=https://praca-magisterska-django-app-330626129759.europe-central2.run.app
+      - BASE_URL=https://praca-magisterska-django-app-1001731509124.europe-central2.run.app
       - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
 
-  k6-azure:
+  k6-gcp-high:
     extends: { service: k6-base }
     environment:
-      - BASE_URL=https://service.azurewebsites.net
-      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
+      - BASE_URL=https://praca-magisterska-django-app-1001731509124.europe-central2.run.app
+      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
 
-  k6-local:
+  k6-azure-low:
     extends: { service: k6-base }
     environment:
-      - BASE_URL=http://host.docker.internal:8000
-      - K6_PROMETHEUS_LABELS="cloud=local,run=$(date +%s)"
+      - BASE_URL=---
+      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
+
+  k6-azure-high:
+    extends: { service: k6-base }
+    environment:
+      - BASE_URL=---
+      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
 
 volumes:
   grafana_data: {}

@@ -24,7 +24,7 @@ scrape_configs:
     metrics_path: "/metrics"
     static_configs:
       - targets:
-          - "praca-magisterska-django-app-330626129759.europe-central2.run.app"
+          - "praca-magisterska-django-app-1001731509124.europe-central2.run.app"
         labels:
           app: "django-gcp"
           service: "django-gcp"

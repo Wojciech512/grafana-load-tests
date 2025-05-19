@@ -1,3 +1,7 @@
+# TODO wdrożyć 3 typy konfiguracji na raz
+# Minimalna: 1 vCPU, 512 MB RAM
+# NIE Średnia: 2 vCPU, 1 GB RAM
+# Wysoka: 4 vCPU, 2 GB RAM
 resource "google_sql_database_instance" "postgres" {
   name             = "praca-magisterska-db"
   project          = google_project.this.project_id
