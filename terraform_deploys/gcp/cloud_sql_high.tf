@@ -10,7 +10,7 @@ resource "google_sql_database_instance" "postgres_high" {
   ]
 
   settings {
-    tier    = "db-n1-standard-1"
+    tier    = "db-custom-4-7168"
     edition = "ENTERPRISE"
 
     insights_config {

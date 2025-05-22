@@ -1,6 +1,6 @@
 variable "project_id" {
   type    = string
-  default = "praca-magisterska-proj-gcp-6"
+  default = "praca-magisterska-proj-gcp-7"
 }
 
 variable "project_region" {

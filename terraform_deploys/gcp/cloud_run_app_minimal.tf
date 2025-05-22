@@ -19,11 +19,10 @@ resource "google_cloud_run_v2_service" "django_public_minimal" {
         container_port = 8000
       }
 
-      # zasoby dla profilu Minimalna: 1 vCPU, 512 MB RAM
       resources {
         limits = {
           cpu    = "1"
-          memory = "512Mi"
+          memory = "1792Mi"
         }
       }
 

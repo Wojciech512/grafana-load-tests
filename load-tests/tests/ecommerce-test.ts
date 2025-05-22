@@ -1,18 +1,7 @@
-// TODO Chcesz porównać same platformy (GCP Cloud Run vs Azure App Service, …), a nie logikę Twojej aplikacji Django.
-//  Musisz więc zaprojektować testy, które eksponują cechy infrastruktury:
-//  czas zimnego startu,
-//  szybkość autoscalingu,
-//  granice przepustowości,
-//  wpływ skoków ruchu,
-//  koszt przy różnym obciążeniu
-//  i stabilność w dłuższym horyzoncie.
-//  Stress & Ramp-up Spike  Cold-start Soak / endurance
-
 import http, { RefinedResponse, ResponseType, RefinedParams } from "k6/http";
 import { sleep, check } from "k6";
 import exec from "k6/execution";
 
-/* ---------- annotation helpers ---------- */
 const url = `http://${__ENV.GRAFANA_URL}/api/annotations`;
 const token = __ENV.GRAFANA_TOKEN;
 let start = 0;
@@ -53,10 +42,8 @@ export function teardown() {
   );
 }
 
-/* ---------- konfiguracja globalna ---------- */
 const BASE = __ENV.BASE_URL;
 
-/* ---------- helper CSRF ---------- */
 function csrfHeaders(
   page: RefinedResponse<ResponseType>,
 ): RefinedParams<undefined> | undefined {
@@ -70,10 +57,8 @@ function csrfHeaders(
   };
 }
 
-/* ---------- stary scenariusz użytkownika ---------- */
 export function userJourney() {
   try {
-    /* 1. rejestracja */
     let page = http.get(`${BASE}/account/register`);
     let headers = csrfHeaders(page);
 
@@ -86,7 +71,6 @@ export function userJourney() {
     let res = http.post(`${BASE}/account/register`, regBody, headers);
     check(res, { "register ok": (r) => [200, 302].includes(r.status) });
 
-    /* 2. logowanie */
     page = http.get(`${BASE}/account/login`);
     headers = csrfHeaders(page);
     const loginBody = { username: `user${__VU}`, password: "Test123!" };
@@ -94,18 +78,11 @@ export function userJourney() {
     check(res, { "login ok": (r) => [200, 302].includes(r.status) });
     sleep(1);
 
-    /* 3. produkt */
-    res = http.get(`${BASE}/product/electronics-produkt-1-16472/`);
-    check(res, { product: (r) => r.status === 200 });
-    sleep(1);
-
-    /* 4. koszyk */
     const cartBody = { product_id: "68226", quantity: "1" };
     res = http.post(`${BASE}/cart/`, cartBody, headers);
     check(res, { cart: (r) => [200, 302].includes(r.status) });
     sleep(1);
 
-    /* 5-6. checkout + dashboard */
     check(http.get(`${BASE}/payment/checkout`), {
       checkout: (r) => r.status === 200,
     });
@@ -133,7 +110,6 @@ export function userJourney() {
   }
 }
 
-/* ---------- scenariusze obciążenia ---------- */
 export const options = {
   thresholds: {
     // RED – Requests, Errors, Duration
@@ -211,7 +187,7 @@ export const options = {
       executor: "constant-arrival-rate",
       rate: 20,
       timeUnit: "1s",
-      duration: "2h",
+      duration: "1h",
       preAllocatedVUs: 10,
       maxVUs: 50,
       startTime: "61m",

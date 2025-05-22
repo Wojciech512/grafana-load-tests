@@ -10,7 +10,7 @@ resource "google_sql_database_instance" "postgres_medium" {
   ]
 
   settings {
-    tier    = "db-g1-small"
+    tier    = "db-custom-2-3840"
     edition = "ENTERPRISE"
 
     insights_config {

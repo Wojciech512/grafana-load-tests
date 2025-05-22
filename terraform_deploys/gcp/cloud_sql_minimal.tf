@@ -10,7 +10,7 @@ resource "google_sql_database_instance" "postgres_minimal" {
   ]
 
   settings {
-    tier    = "db-f1-micro"
+    tier    = "db-g1-small"
     edition = "ENTERPRISE"
 
     insights_config {

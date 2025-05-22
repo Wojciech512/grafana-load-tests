@@ -19,11 +19,10 @@ resource "google_cloud_run_v2_service" "cloud_run_app_high" {
         container_port = 8000
       }
 
-      # zasoby dla profilu Wysoka: 4 vCPU, 2 GB RAM
       resources {
         limits = {
           cpu    = "4"
-          memory = "2048Mi"
+          memory = "7168Mi"
         }
       }
 
