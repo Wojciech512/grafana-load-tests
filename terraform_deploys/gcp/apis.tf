@@ -6,6 +6,7 @@ locals {
     "monitoring.googleapis.com",
     "logging.googleapis.com",
     "compute.googleapis.com",
+    "iam.googleapis.com",
   ]
 }
 

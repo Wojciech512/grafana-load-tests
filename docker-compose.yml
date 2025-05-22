@@ -10,6 +10,7 @@ version: "3.9"
 #Cloud Monitoring (dawniej Stackdriver) oferuje bibliotekę wbudowanych dashboardów i widżetów do szybkiego wyświetlania metryk CPU, pamięci, ruchu sieciowego i autoscalingu bez konieczności instalacji eksportera
 #Google Cloud. Darmowy próg obejmuje 1 mln zwróconych szeregów czasowych miesięcznie, a kolejne kosztują $0.50 za milion zwróconych serii, co przekłada się na około $3.82 miesięcznie dla typowego zestawu 10 metryk śledzonych co 5 minut przez 30 dni
 #Google Cloud.
+
 #TODO DODAĆ ADNOTACJE DO METRYK KONTENERA? NIE LEPIEJ WYPISYWAĆ PRZEDZIAŁY CZASOWE I NA PODSTAWIE TEGO FILTROWAĆ?
 #TODO uruchomić testy i zweryfikować jak zbieraja się dane oraz czy widać na każdym rozpoczęcie i zakończenie testów
 #TODO przygotować 3x terraform cloud run + clod sql dla gcp jak najmniejsze koszty
@@ -31,31 +32,6 @@ services:
       - prometheus_data:/prometheus
     ports:
       - "9090:9090"
-
-  stackdriver-exporter-gcp:
-    image: quay.io/prometheuscommunity/stackdriver-exporter:latest
-    container_name: sd-exporter
-    env_file:
-      - .env
-    environment:
-      - GOOGLE_APPLICATION_CREDENTIALS=/etc/stackdriver/gcp-credentials.json
-    command:
-      - --google.project-id=${GCP_PROJECT_ID}
-      - --monitoring.metrics-prefixes=run.googleapis.com/container/cpu/usage
-      - --monitoring.metrics-prefixes=run.googleapis.com/container/cpu/utilizations
-      - --monitoring.metrics-prefixes=run.googleapis.com/container/memory/usage
-      - --monitoring.metrics-prefixes=run.googleapis.com/container/memory/utilizations
-      - --monitoring.metrics-prefixes=run.googleapis.com/container/network/received_bytes_count
-      - --monitoring.metrics-prefixes=run.googleapis.com/container/network/sent_bytes_count
-      - --monitoring.metrics-prefixes=run.googleapis.com/container/instance_count
-      - --monitoring.metrics-prefixes=run.googleapis.com/container/startup_latencies
-      - --monitoring.metrics-interval=1m
-      - --monitoring.metrics-offset=1m
-      - --web.listen-address=:8080
-    volumes:
-      - ./terraform_deploys/gcp/gcp-credentials.json:/etc/stackdriver/gcp-credentials.json:ro
-    ports:
-      - "8080:8080"
 
   grafana:
     image: grafana/grafana:latest
@@ -102,6 +78,31 @@ services:
     ports:
       - "9187:9187"
 
+  stackdriver-exporter-gcp:
+    image: quay.io/prometheuscommunity/stackdriver-exporter:latest
+    container_name: sd-exporter
+    env_file:
+      - .env
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/etc/stackdriver/gcp-credentials.json
+    command:
+      - --google.project-id=${GCP_PROJECT_ID}
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/cpu/usage
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/cpu/utilizations
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/memory/usage
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/memory/utilizations
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/network/received_bytes_count
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/network/sent_bytes_count
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/instance_count
+      - --monitoring.metrics-prefixes=run.googleapis.com/container/startup_latencies
+      - --monitoring.metrics-interval=1m
+      - --monitoring.metrics-offset=1m
+      - --web.listen-address=:8080
+    volumes:
+      - ./terraform_deploys/gcp/gcp-credentials.json:/etc/stackdriver/gcp-credentials.json:ro
+    ports:
+      - "8080:8080"
+
   k6-base: &common
     build:
       context: ./load-tests
@@ -126,7 +127,7 @@ services:
   #TODO 2x 2x dla różnych url aplikacji
   #TODO upewnić się czy serwisy dadzą radę pracować równocześnie 3x, sprawdizć podzespoły
   #TODO dodać tagi rozróżniające źródła w prometheus
-#  todo ZROBIĆ 2 RUNY KAŻDEGO Z TESTÓW RÓWNOLEGLE??? ZAPYTAĆ SIĘ
+  #  todo ZROBIĆ 2 RUNY KAŻDEGO Z TESTÓW RÓWNOLEGLE??? ZAPYTAĆ SIĘ
   k6-gcp-low:
     extends: { service: k6-base }
     environment:

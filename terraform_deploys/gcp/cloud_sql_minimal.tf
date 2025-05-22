@@ -1,20 +1,17 @@
-# TODO wdrożyć 3 typy konfiguracji na raz
-# Minimalna: 1 vCPU, 512 MB RAM
-# NIE Średnia: 2 vCPU, 1 GB RAM
-# Wysoka: 4 vCPU, 2 GB RAM
-resource "google_sql_database_instance" "postgres" {
-  name             = "praca-magisterska-db"
+resource "google_sql_database_instance" "postgres_minimal" {
+  name             = "praca-magisterska-db-minimal"
   project          = google_project.this.project_id
   database_version = "POSTGRES_16"
   region           = var.project_region
 
   depends_on = [
     google_project_service.billing_api,
-    google_project_service.enabled_apis["sqladmin.googleapis.com"]
+    google_project_service.enabled_apis["sqladmin.googleapis.com"],
   ]
 
   settings {
-    tier = "db-perf-optimized-N-2"
+    tier    = "db-f1-micro"
+    edition = "ENTERPRISE"
 
     insights_config {
       query_insights_enabled  = true
@@ -37,8 +34,8 @@ resource "google_sql_database_instance" "postgres" {
   }
 }
 
-resource "google_sql_user" "postgres_user" {
-  name     = var.GOOGLE_POSTGRESQL_NAME
-  instance = google_sql_database_instance.postgres.name
-  password = var.GOOGLE_POSTGRESQL_PASSWORD
+resource "google_sql_user" "postgres_user_minimal" {
+  name        = var.GOOGLE_POSTGRESQL_NAME
+  instance    = google_sql_database_instance.postgres_minimal.name
+  password_wo = var.GOOGLE_POSTGRESQL_PASSWORD
 }
