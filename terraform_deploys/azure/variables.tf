@@ -1,78 +1,31 @@
-variable "location" {
-  type    = string
-  default = "polandcentral"
-}
-
 variable "resource_group_name" {
-  type    = string
-  default = "rg-terraform-app-db"
+  description = "Nazwa Resource Group w Azure"
+  type        = string
+  default     = "praca-magisterska-proj-azure-1"
 }
 
-variable "container_image" {
-  type    = string
-  default = "nginx:latest"
-}
-
-variable "PROXY_DB_USERNAME" {
-  type      = string
-  sensitive = true
-}
-
-variable "PROXY_DB_PASSWORD" {
-  type      = string
-  sensitive = true
-}
-
-variable "SP_NAME" {
-  type      = string
-  sensitive = true
-}
-
-variable "SP_PASSWORD" {
-  type      = string
-  sensitive = true
-}
-
-variable "DEBUG" {
-  type = bool
-}
-
-variable "ALLOWED_HOSTS" {
-  type = string
-}
-
-variable "EMAIL_HOST_USER" {
-  type      = string
-  sensitive = true
-}
-
-variable "EMAIL_HOST_PASSWORD" {
-  type      = string
-  sensitive = true
-}
-
-variable "SECRET_KEY" {
-  type      = string
-  sensitive = true
-}
-
-variable "CSRF_TRUSTED_ORIGINS" {
-  type      = string
-  sensitive = true
+variable "location" {
+  description = "Region (lokalizacja) w Azure, w którym będą tworzone zasoby"
+  type        = string
+  default     = "Poland Central"
 }
 
 variable "AZURE_POSTGRESQL_NAME" {
-  type      = string
-  sensitive = true
+  description = "Prefiks nazwy dla instancji PostgreSQL"
+  type        = string
+  sensitive   = true
+
 }
 
 variable "AZURE_POSTGRESQL_USERNAME" {
-  type      = string
-  sensitive = true
+  description = "Administator (login) dla PostgreSQL"
+  type        = string
+  sensitive   = true
+
 }
 
 variable "AZURE_POSTGRESQL_PASSWORD" {
-  type      = string
-  sensitive = true
+  description = "Hasło administratora PostgreSQL"
+  type        = string
+  sensitive   = true
 }
-
