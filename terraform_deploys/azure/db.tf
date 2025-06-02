@@ -25,8 +25,6 @@ resource "azurerm_postgresql_flexible_server" "db_b1ms" {
   backup_retention_days        = local.backup_retention
   geo_redundant_backup_enabled = local.geo_redundant_backups
 
-  private_dns_zone_id = null
-
   public_network_access_enabled = true
 
   lifecycle {
@@ -51,8 +49,6 @@ resource "azurerm_postgresql_flexible_server" "db_b2s" {
   backup_retention_days        = local.backup_retention
   geo_redundant_backup_enabled = local.geo_redundant_backups
 
-  private_dns_zone_id = null
-
   public_network_access_enabled = true
 
   lifecycle {
@@ -76,8 +72,6 @@ resource "azurerm_postgresql_flexible_server" "db_b2ms" {
   storage_mb                   = local.storage_mb
   backup_retention_days        = local.backup_retention
   geo_redundant_backup_enabled = local.geo_redundant_backups
-
-  private_dns_zone_id = null
 
   public_network_access_enabled = true
 
