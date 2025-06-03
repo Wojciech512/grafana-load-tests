@@ -1,6 +1,6 @@
 variable "project_id" {
   type    = string
-  default = "praca-magisterska-proj-gcp-7"
+  default = "praca-magisterska-proj-gcp-1"
 }
 
 variable "project_region" {
@@ -20,7 +20,7 @@ variable "repository_id" {
 
 variable "billing_account" {
   type    = string
-  default = "015886-0592BC-AB7956"
+  default = "01A948-D25658-C3D852"
 }
 
 variable "DEBUG" {
