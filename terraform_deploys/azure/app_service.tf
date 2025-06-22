@@ -90,3 +90,19 @@ resource "azurerm_app_service_virtual_network_swift_connection" "swift_web_b2ms"
   app_service_id = azurerm_linux_web_app.web_b2ms.id
   subnet_id      = azurerm_subnet.db_subnet.id
 }
+
+
+locals {
+  webapp_principals = {
+    web_b1ms = azurerm_linux_web_app.web_b1ms.identity[0].principal_id
+    web_b2s  = azurerm_linux_web_app.web_b2s.identity[0].principal_id
+    web_b2ms = azurerm_linux_web_app.web_b2ms.identity[0].principal_id
+  }
+}
+
+resource "azurerm_role_assignment" "webapp_acr_pull" {
+  for_each             = local.webapp_principals
+  scope                = azurerm_container_registry.acr.id
+  role_definition_name = "AcrPull"
+  principal_id         = each.value
+}
