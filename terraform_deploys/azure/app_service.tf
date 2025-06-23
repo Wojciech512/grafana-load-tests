@@ -5,9 +5,9 @@ resource "azurerm_linux_web_app" "web_b1ms" {
   service_plan_id     = azurerm_service_plan.plan_b1.id
 
   site_config {
-    application_stack {
-      docker_image_name = "DOCKER|mcr.microsoft.com/azuredocs/aspnet-sql-app:latest"
-    }
+    linux_fx_version                        = "DOCKER|${azurerm_container_registry.acr.login_server}/moja-apka:v1"
+    container_registry_use_managed_identity = true
+
     http2_enabled       = true
     minimum_tls_version = "1.2"
   }
@@ -36,9 +36,9 @@ resource "azurerm_linux_web_app" "web_b2s" {
   service_plan_id     = azurerm_service_plan.plan_b2.id
 
   site_config {
-    application_stack {
-      docker_image_name = "DOCKER|mcr.microsoft.com/azuredocs/aspnet-sql-app:latest"
-    }
+    linux_fx_version                        = "DOCKER|${azurerm_container_registry.acr.login_server}/moja-apka:v1"
+    container_registry_use_managed_identity = true
+
     http2_enabled       = true
     minimum_tls_version = "1.2"
   }
@@ -67,9 +67,9 @@ resource "azurerm_linux_web_app" "web_b2ms" {
   service_plan_id     = azurerm_service_plan.plan_b3.id
 
   site_config {
-    application_stack {
-      docker_image_name = "DOCKER|mcr.microsoft.com/azuredocs/aspnet-sql-app:latest"
-    }
+    linux_fx_version                        = "DOCKER|${azurerm_container_registry.acr.login_server}/moja-apka:v1"
+    container_registry_use_managed_identity = true
+
     http2_enabled       = true
     minimum_tls_version = "1.2"
   }

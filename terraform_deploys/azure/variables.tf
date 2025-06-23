@@ -33,6 +33,7 @@ variable "AZURE_POSTGRESQL_PASSWORD" {
 variable "acr_name" {
   description = "Nazwa Azure Container Registry (musi być unikalna w całym Azure)"
   type        = string
+  default     = "pracamagisterskaacr"
 }
 
 variable "acr_sku" {
@@ -41,25 +42,25 @@ variable "acr_sku" {
   default     = "Standard"
 }
 
-variable "vnet_name" {
-  description = "Nazwa Virtual Network"
-  type        = string
-}
-
-variable "vnet_address_space" {
-  description = "Address space dla VNet"
-  type        = list(string)
-  default     = ["10.0.0.0/16"]
-}
-
-variable "subnet_name" {
-  description = "Nazwa Subnetu w VNet"
-  type        = string
-}
-
-variable "subnet_prefix" {
-  description = "Prefix sieciowy dla Subnetu"
-  type        = string
-  default     = "10.0.1.0/24"
-}
+# variable "vnet_name" {
+#   description = "Nazwa Virtual Network"
+#   type        = string
+# }
+#
+# variable "vnet_address_space" {
+#   description = "Address space dla VNet"
+#   type        = list(string)
+#   default     = ["10.0.0.0/16"]
+# }
+#
+# variable "subnet_name" {
+#   description = "Nazwa Subnetu w VNet"
+#   type        = string
+# }
+#
+# variable "subnet_prefix" {
+#   description = "Prefix sieciowy dla Subnetu"
+#   type        = string
+#   default     = "10.0.1.0/24"
+# }
 
