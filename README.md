@@ -97,19 +97,17 @@ terraform validate -var-file="cloud_env.tfvars"
 ## Artefact registry
 
 ## Usługi hostowania aplikacji (container web app)
-
 B1 to absolutne minimum — wystarczy na lekkie testy i prototypy, przy koszcie ~13 USD/mies.
 B2 to złoty środek: 2 vCPU i 3,5 GB RAM za ~26 USD/mies. — dobra przepustowość przy nadal niskim koszcie.
 B3 zapewni już 4 vCPU i 7 GB RAM za ~52 USD/mies., gdy potrzebujesz więcej mocy.
 
-## Połączenie
-
-Definicja Virtual Network i Subnet (bez service_endpoints)
-
 ## Usługi hostowania bazy danych (flex db postgresql16)
-
 Standard_B1ms (rdzeń wirtualny:1, pamięć GiB:2, maksymalna liczba operacji we/wy na sekundę:640)
 Standard_B2s (rdzenie wirtualne:2, pamięć GiB:4, maksymalna liczba operacji we/wy na sekundę:1280)
 Standard_B2ms (rdzenie wirtualne:2, pamięć GiB:8, maksymalna liczba operacji we/wy na sekundę:1920)
+
+## Połączenie
+
+Definicja Virtual Network i Subnet (bez service_endpoints)
 
 ## Artefact registry - przechowywanie obrazu do kontenera, każdy container web app zaciąga obraz z tego rejestru
