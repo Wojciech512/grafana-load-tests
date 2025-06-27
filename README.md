@@ -111,3 +111,6 @@ Standard_B2ms (rdzenie wirtualne:2, pamięć GiB:8, maksymalna liczba operacji w
 Definicja Virtual Network i Subnet (bez service_endpoints)
 
 ## Artefact registry - przechowywanie obrazu do kontenera, każdy container web app zaciąga obraz z tego rejestru
+
+## debug logs
+URL/api/logstream

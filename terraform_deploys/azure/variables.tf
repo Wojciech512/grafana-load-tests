@@ -1,43 +1,64 @@
 variable "resource_group_name" {
-  description = "Nazwa Resource Group w Azure"
-  type        = string
-  default     = "praca-magisterska-proj-azure-1"
+  type    = string
+  default = "praca-magisterska-proj-azure-2"
 }
 
 variable "location" {
-  description = "Region (lokalizacja) w Azure, w którym będą tworzone zasoby"
-  type        = string
-  default     = "Poland Central"
+  type    = string
+  default = "Poland Central"
 }
 
 variable "AZURE_POSTGRESQL_NAME" {
-  description = "Prefiks nazwy dla instancji PostgreSQL"
-  type        = string
-  sensitive   = true
-
+  type      = string
+  sensitive = true
 }
 
 variable "AZURE_POSTGRESQL_USERNAME" {
-  description = "Administator (login) dla PostgreSQL"
-  type        = string
-  sensitive   = true
-
+  type      = string
+  sensitive = true
 }
 
 variable "AZURE_POSTGRESQL_PASSWORD" {
-  description = "Hasło administratora PostgreSQL"
-  type        = string
-  sensitive   = true
+  type      = string
+  sensitive = true
 }
 
 variable "acr_name" {
-  description = "Nazwa Azure Container Registry (musi być unikalna w całym Azure)"
-  type        = string
-  default     = "pracamagisterskaacr"
+  type    = string
+  default = "pracamagisterskaacr"
 }
 
 variable "acr_sku" {
-  description = "SKU ACR: Basic, Standard lub Premium"
-  type        = string
-  default     = "Standard"
+  type    = string
+  default = "Standard"
+}
+
+variable "DEBUG" {
+  type      = string
+  sensitive = true
+}
+
+variable "ALLOWED_HOSTS" {
+  type      = string
+  sensitive = true
+}
+
+variable "SECRET_KEY" {
+  type      = string
+  sensitive = true
+}
+
+variable "EMAIL_HOST_USER" {
+  type      = string
+  sensitive = true
+}
+
+variable "EMAIL_HOST_PASSWORD" {
+  type      = string
+  sensitive = true
+}
+
+variable "CSRF_TRUSTED_ORIGINS" {
+  type      = string
+  sensitive = true
 }

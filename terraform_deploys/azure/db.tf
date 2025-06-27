@@ -1,5 +1,8 @@
+# TODO zweryfikować poprawność połączenia - przez private endpoint
+# TODO zweryfikować prędkość połączenie
+# TODO refaktoryzacja kodu zgodnie z dobrymi praktykami
 locals {
-  version               = "13"
+  version               = "16"
   storage_mb            = 32768
   backup_retention      = 7
   geo_redundant_backups = false
@@ -19,12 +22,11 @@ resource "azurerm_postgresql_flexible_server" "db_b1ms" {
   sku_name = "B_Standard_B1ms"
   version  = local.version
 
-  administrator_login          = var.AZURE_POSTGRESQL_USERNAME
-  administrator_password       = var.AZURE_POSTGRESQL_PASSWORD
-  storage_mb                   = local.storage_mb
-  backup_retention_days        = local.backup_retention
-  geo_redundant_backup_enabled = local.geo_redundant_backups
-
+  administrator_login           = var.AZURE_POSTGRESQL_USERNAME
+  administrator_password        = var.AZURE_POSTGRESQL_PASSWORD
+  storage_mb                    = local.storage_mb
+  backup_retention_days         = local.backup_retention
+  geo_redundant_backup_enabled  = local.geo_redundant_backups
   public_network_access_enabled = true
 
   lifecycle {
@@ -43,12 +45,11 @@ resource "azurerm_postgresql_flexible_server" "db_b2s" {
   sku_name = "B_Standard_B2s"
   version  = local.version
 
-  administrator_login          = var.AZURE_POSTGRESQL_USERNAME
-  administrator_password       = var.AZURE_POSTGRESQL_PASSWORD
-  storage_mb                   = local.storage_mb
-  backup_retention_days        = local.backup_retention
-  geo_redundant_backup_enabled = local.geo_redundant_backups
-
+  administrator_login           = var.AZURE_POSTGRESQL_USERNAME
+  administrator_password        = var.AZURE_POSTGRESQL_PASSWORD
+  storage_mb                    = local.storage_mb
+  backup_retention_days         = local.backup_retention
+  geo_redundant_backup_enabled  = local.geo_redundant_backups
   public_network_access_enabled = true
 
   lifecycle {
@@ -67,12 +68,11 @@ resource "azurerm_postgresql_flexible_server" "db_b2ms" {
   sku_name = "B_Standard_B2ms"
   version  = local.version
 
-  administrator_login          = var.AZURE_POSTGRESQL_USERNAME
-  administrator_password       = var.AZURE_POSTGRESQL_PASSWORD
-  storage_mb                   = local.storage_mb
-  backup_retention_days        = local.backup_retention
-  geo_redundant_backup_enabled = local.geo_redundant_backups
-
+  administrator_login           = var.AZURE_POSTGRESQL_USERNAME
+  administrator_password        = var.AZURE_POSTGRESQL_PASSWORD
+  storage_mb                    = local.storage_mb
+  backup_retention_days         = local.backup_retention
+  geo_redundant_backup_enabled  = local.geo_redundant_backups
   public_network_access_enabled = true
 
   lifecycle {
