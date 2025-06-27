@@ -25,7 +25,9 @@ resource "azurerm_postgresql_flexible_server" "db_b1ms" {
   backup_retention_days        = local.backup_retention
   geo_redundant_backup_enabled = local.geo_redundant_backups
 
-  public_network_access_enabled = true
+  public_network_access_enabled = false
+  delegated_subnet_id           = azurerm_subnet.db_subnet.id
+  private_dns_zone_id           = azurerm_private_dns_zone.postgres.id
 
   lifecycle {
     ignore_changes = [
@@ -49,7 +51,9 @@ resource "azurerm_postgresql_flexible_server" "db_b2s" {
   backup_retention_days        = local.backup_retention
   geo_redundant_backup_enabled = local.geo_redundant_backups
 
-  public_network_access_enabled = true
+  public_network_access_enabled = false
+  delegated_subnet_id           = azurerm_subnet.db_subnet.id
+  private_dns_zone_id           = azurerm_private_dns_zone.postgres.id
 
   lifecycle {
     ignore_changes = [
@@ -73,7 +77,9 @@ resource "azurerm_postgresql_flexible_server" "db_b2ms" {
   backup_retention_days        = local.backup_retention
   geo_redundant_backup_enabled = local.geo_redundant_backups
 
-  public_network_access_enabled = true
+  public_network_access_enabled = false
+  delegated_subnet_id           = azurerm_subnet.db_subnet.id
+  private_dns_zone_id           = azurerm_private_dns_zone.postgres.id
 
   lifecycle {
     ignore_changes = [
