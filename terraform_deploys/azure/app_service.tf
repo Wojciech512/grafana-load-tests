@@ -5,8 +5,10 @@ resource "azurerm_linux_web_app" "web_b1ms" {
   service_plan_id     = azurerm_service_plan.plan_b1.id
 
   site_config {
+    vnet_route_all_enabled = true
+
     application_stack {
-      docker_image_name   = "${azurerm_container_registry.acr.login_server}/ecommerce-app:latest"
+      docker_image_name   = "ecommerce-app:latest"
       docker_registry_url = "https://${azurerm_container_registry.acr.login_server}"
     }
 
@@ -17,7 +19,19 @@ resource "azurerm_linux_web_app" "web_b1ms" {
 
   app_settings = {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
-    "DATABASE_URL"                        = "postgresql://${var.AZURE_POSTGRESQL_USERNAME}:${var.AZURE_POSTGRESQL_PASSWORD}@${azurerm_postgresql_flexible_server.db_b1ms.fqdn}:5432/postgres?sslmode=require"
+
+    "AZURE_POSTGRESQL_NAME"     = var.AZURE_POSTGRESQL_NAME
+    "AZURE_POSTGRESQL_USERNAME" = var.AZURE_POSTGRESQL_USERNAME
+    "AZURE_POSTGRESQL_PASSWORD" = var.AZURE_POSTGRESQL_PASSWORD
+    "AZURE_POSTGRESQL_HOST"     = "${azurerm_postgresql_flexible_server.db_b1ms.name}.privatelink.postgres.database.azure.com"
+    "AZURE_POSTGRESQL_PORT"     = "5432"
+
+    "DEBUG"                = var.DEBUG
+    "ALLOWED_HOSTS"        = var.ALLOWED_HOSTS
+    "SECRET_KEY"           = var.SECRET_KEY
+    "EMAIL_HOST_USER"      = var.EMAIL_HOST_USER
+    "EMAIL_HOST_PASSWORD"  = var.EMAIL_HOST_PASSWORD
+    "CSRF_TRUSTED_ORIGINS" = var.CSRF_TRUSTED_ORIGINS
   }
 
   https_only = true
@@ -29,7 +43,7 @@ resource "azurerm_linux_web_app" "web_b1ms" {
 
 resource "azurerm_app_service_virtual_network_swift_connection" "swift_web_b1ms" {
   app_service_id = azurerm_linux_web_app.web_b1ms.id
-  subnet_id      = azurerm_subnet.db_subnet.id
+  subnet_id      = azurerm_subnet.app_subnet.id
 }
 
 resource "azurerm_linux_web_app" "web_b2s" {
@@ -39,8 +53,10 @@ resource "azurerm_linux_web_app" "web_b2s" {
   service_plan_id     = azurerm_service_plan.plan_b2.id
 
   site_config {
+    vnet_route_all_enabled = true
+
     application_stack {
-      docker_image_name   = "${azurerm_container_registry.acr.login_server}/ecommerce-app:latest"
+      docker_image_name   = "ecommerce-app:latest"
       docker_registry_url = "https://${azurerm_container_registry.acr.login_server}"
     }
 
@@ -51,7 +67,19 @@ resource "azurerm_linux_web_app" "web_b2s" {
 
   app_settings = {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
-    "DATABASE_URL"                        = "postgresql://${var.AZURE_POSTGRESQL_USERNAME}:${var.AZURE_POSTGRESQL_PASSWORD}@${azurerm_postgresql_flexible_server.db_b2s.fqdn}:5432/postgres?sslmode=require"
+
+    "AZURE_POSTGRESQL_NAME"     = var.AZURE_POSTGRESQL_NAME
+    "AZURE_POSTGRESQL_USERNAME" = var.AZURE_POSTGRESQL_USERNAME
+    "AZURE_POSTGRESQL_PASSWORD" = var.AZURE_POSTGRESQL_PASSWORD
+    "AZURE_POSTGRESQL_HOST"     = "${azurerm_postgresql_flexible_server.db_b2s.name}.privatelink.postgres.database.azure.com"
+    "AZURE_POSTGRESQL_PORT"     = "5432"
+
+    "DEBUG"                = var.DEBUG
+    "ALLOWED_HOSTS"        = var.ALLOWED_HOSTS
+    "SECRET_KEY"           = var.SECRET_KEY
+    "EMAIL_HOST_USER"      = var.EMAIL_HOST_USER
+    "EMAIL_HOST_PASSWORD"  = var.EMAIL_HOST_PASSWORD
+    "CSRF_TRUSTED_ORIGINS" = var.CSRF_TRUSTED_ORIGINS
   }
 
   https_only = true
@@ -63,7 +91,7 @@ resource "azurerm_linux_web_app" "web_b2s" {
 
 resource "azurerm_app_service_virtual_network_swift_connection" "swift_web_b2s" {
   app_service_id = azurerm_linux_web_app.web_b2s.id
-  subnet_id      = azurerm_subnet.db_subnet.id
+  subnet_id      = azurerm_subnet.app_subnet.id
 }
 
 resource "azurerm_linux_web_app" "web_b2ms" {
@@ -73,8 +101,10 @@ resource "azurerm_linux_web_app" "web_b2ms" {
   service_plan_id     = azurerm_service_plan.plan_b3.id
 
   site_config {
+    vnet_route_all_enabled = true
+
     application_stack {
-      docker_image_name   = "${azurerm_container_registry.acr.login_server}/ecommerce-app:latest"
+      docker_image_name   = "ecommerce-app:latest"
       docker_registry_url = "https://${azurerm_container_registry.acr.login_server}"
     }
 
@@ -85,7 +115,19 @@ resource "azurerm_linux_web_app" "web_b2ms" {
 
   app_settings = {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
-    "DATABASE_URL"                        = "postgresql://${var.AZURE_POSTGRESQL_USERNAME}:${var.AZURE_POSTGRESQL_PASSWORD}@${azurerm_postgresql_flexible_server.db_b2ms.fqdn}:5432/postgres?sslmode=require"
+
+    "AZURE_POSTGRESQL_NAME"     = var.AZURE_POSTGRESQL_NAME
+    "AZURE_POSTGRESQL_USERNAME" = var.AZURE_POSTGRESQL_USERNAME
+    "AZURE_POSTGRESQL_PASSWORD" = var.AZURE_POSTGRESQL_PASSWORD
+    "AZURE_POSTGRESQL_HOST"     = "${azurerm_postgresql_flexible_server.db_b2ms.name}.privatelink.postgres.database.azure.com"
+    "AZURE_POSTGRESQL_PORT"     = "5432"
+
+    "DEBUG"                = var.DEBUG
+    "ALLOWED_HOSTS"        = var.ALLOWED_HOSTS
+    "SECRET_KEY"           = var.SECRET_KEY
+    "EMAIL_HOST_USER"      = var.EMAIL_HOST_USER
+    "EMAIL_HOST_PASSWORD"  = var.EMAIL_HOST_PASSWORD
+    "CSRF_TRUSTED_ORIGINS" = var.CSRF_TRUSTED_ORIGINS
   }
 
   https_only = true
@@ -97,7 +139,7 @@ resource "azurerm_linux_web_app" "web_b2ms" {
 
 resource "azurerm_app_service_virtual_network_swift_connection" "swift_web_b2ms" {
   app_service_id = azurerm_linux_web_app.web_b2ms.id
-  subnet_id      = azurerm_subnet.db_subnet.id
+  subnet_id      = azurerm_subnet.app_subnet.id
 }
 
 

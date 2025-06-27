@@ -58,7 +58,7 @@ services:
       - "--debug"
       - "--address=0.0.0.0"
       - "--port=5432"
-      - "--credentials-file=/secrets/gcp-credentials.json"
+      - "--credentials-file=/secrets/gcp- .json"
       - "${GCP_PROJECT_ID}:${GCP_REGION}:${GCP_PROJECT_DB_NAME}"
       - "--prometheus"
     volumes:
