@@ -98,7 +98,7 @@ terraform validate -var-file="cloud_env.tfvars"
 ## ACR
 
 ```
- docker build -t pracamagisterskaacr.azurecr.io/django-app:latest .
+ docker build -t pracamagisterskaacr.azurecr.io/ecommerce-app:latest .
 ```
 
 ```
@@ -106,7 +106,7 @@ az acr login --name pracamagisterskaacr.azurecr.io/
 ```
 
 ```
- docker push pracamagisterskaacr.azurecr.io/django-app:latest
+ docker push pracamagisterskaacr.azurecr.io/ecommerce-app:latest
 ```
 
 ## Usługi hostowania aplikacji (container web app)

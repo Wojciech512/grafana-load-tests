@@ -62,3 +62,9 @@ variable "CSRF_TRUSTED_ORIGINS" {
   type      = string
   sensitive = true
 }
+
+variable "PORT" {
+  type    = string
+  default = "8000"
+}
+

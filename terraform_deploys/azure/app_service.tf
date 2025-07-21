@@ -19,6 +19,8 @@ resource "azurerm_linux_web_app" "web_b1ms" {
 
   app_settings = {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
+    "PORT"                                = var.PORT
+    "WEBSITES_PORT"                       = var.PORT
 
     "AZURE_POSTGRESQL_NAME"     = var.AZURE_POSTGRESQL_NAME
     "AZURE_POSTGRESQL_USERNAME" = var.AZURE_POSTGRESQL_USERNAME
@@ -67,6 +69,8 @@ resource "azurerm_linux_web_app" "web_b2s" {
 
   app_settings = {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
+    "PORT"                                = var.PORT
+    "WEBSITES_PORT"                       = var.PORT
 
     "AZURE_POSTGRESQL_NAME"     = var.AZURE_POSTGRESQL_NAME
     "AZURE_POSTGRESQL_USERNAME" = var.AZURE_POSTGRESQL_USERNAME
@@ -115,6 +119,8 @@ resource "azurerm_linux_web_app" "web_b2ms" {
 
   app_settings = {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
+    "PORT"                                = var.PORT
+    "WEBSITES_PORT"                       = var.PORT
 
     "AZURE_POSTGRESQL_NAME"     = var.AZURE_POSTGRESQL_NAME
     "AZURE_POSTGRESQL_USERNAME" = var.AZURE_POSTGRESQL_USERNAME
