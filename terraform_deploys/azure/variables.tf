@@ -1,6 +1,6 @@
 variable "resource_group_name" {
   type    = string
-  default = "praca-magisterska-proj-azure-2"
+  default = "praca-magisterska-proj-azure"
 }
 
 variable "location" {
@@ -68,3 +68,8 @@ variable "PORT" {
   default = "8000"
 }
 
+resource "random_string" "suffix" {
+  length  = 5
+  special = false
+  upper   = false
+}
