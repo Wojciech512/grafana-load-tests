@@ -1,9 +1,9 @@
-variable "name" {
+variable "name_input" {
   type        = string
   description = "Resource Group name"
 }
 
-variable "location" {
+variable "location_input" {
   type        = string
   description = "Azure region"
 }
