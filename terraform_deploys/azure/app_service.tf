@@ -13,13 +13,13 @@ locals {
 
   webapps_configs = {
     web-b1-linux = {
-      database_host = azurerm_postgresql_flexible_server.database["db_b1ms-postgres"].name
+      database_host = azurerm_postgresql_flexible_server.database["db-b1ms-postgres"].name
     }
     web-b2-linux = {
-      database_host = azurerm_postgresql_flexible_server.database["db_b2s-postgres"].name
+      database_host = azurerm_postgresql_flexible_server.database["db-b2s-postgres"].name
     }
     web-b3-linux = {
-      database_host = azurerm_postgresql_flexible_server.database["db_b2ms-postgres"].name
+      database_host = azurerm_postgresql_flexible_server.database["db-b2ms-postgres"].name
     }
   }
 

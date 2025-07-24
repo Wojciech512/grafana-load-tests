@@ -16,9 +16,9 @@ resource "azurerm_private_dns_zone_virtual_network_link" "postgres_link" {
 
 resource "azurerm_private_endpoint" "postgres_pe" {
   for_each = {
-    db_b1ms = azurerm_postgresql_flexible_server.database["db_b1ms-postgres"].id
-    db_b2s  = azurerm_postgresql_flexible_server.database["db_b2s-postgres"].id
-    db_b2ms = azurerm_postgresql_flexible_server.database["db_b2ms-postgres"].id
+    db_b1ms = azurerm_postgresql_flexible_server.database["db-b1ms-postgres"].id
+    db_b2s  = azurerm_postgresql_flexible_server.database["db-b2s-postgres"].id
+    db_b2ms = azurerm_postgresql_flexible_server.database["db-b2ms-postgres"].id
   }
   name                = "private-endpoint-postgres-${each.key}"
   resource_group_name = azurerm_resource_group.rg.name

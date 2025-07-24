@@ -1,12 +1,12 @@
 locals {
   database_config = {
-    db_b1ms-postgres = {
+    db-b1ms-postgres = {
       sku_name = "B_Standard_B1ms"
     }
-    db_b2s-postgres = {
+    db-b2s-postgres = {
       sku_name = "B_Standard_B2s"
     }
-    db_b2ms-postgres = {
+    db-b2ms-postgres = {
       sku_name = "B_Standard_B2ms"
     }
   }
