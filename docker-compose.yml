@@ -25,6 +25,8 @@ services:
   prometheus:
     image: prom/prometheus:latest
     restart: unless-stopped
+    env_file:
+      - .env
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.enable-remote-write-receiver"
@@ -60,7 +62,7 @@ services:
   #      DATA_SOURCE_NAME: "postgresql://${GOOGLE_POSTGRESQL_USERNAME}:${GOOGLE_POSTGRESQL_PASSWORD}@gcp-sql-proxy:5432/${GOOGLE_POSTGRESQL_NAME}?sslmode=disable"
   #    ports:
   #      - "9187:9187"
-
+  #TODO zweryfikować paramety pozyskiwane przez oba eksportery np interval co ile 1m, jakie metryki
   stackdriver-exporter-gcp:
     image: quay.io/prometheuscommunity/stackdriver-exporter:latest
     restart: unless-stopped
@@ -92,21 +94,14 @@ services:
 
   azure-metrics-exporter:
     image: webdevops/azure-metrics-exporter:latest
-    container_name: azure-metrics-exporter
     restart: unless-stopped
     ports:
-      - "9276:9276"
+      - "8081:8080"
     environment:
-      # AAD Service Principal
       AZURE_TENANT_ID: "${AZURE_TENANT_ID_PRIVATE}"
       AZURE_CLIENT_ID: "${AZURE_CLIENT_ID_PRIVATE}"
       AZURE_CLIENT_SECRET: "${AZURE_CLIENT_SECRET_PRIVATE}"
       AZURE_SUBSCRIPTION_ID: "${AZURE_SUBSCRIPTION_ID_PRIVATE}"
-      AZURE_METRICS_EXPORTER_CONFIG: "/etc/azure-metrics-exporter/config.yml"
-      AZURE_EXPORTER_INTERVAL: "60s"
-      AZURE_EXPORTER_LOG_LEVEL: "info"
-    volumes:
-      - ./azure-metrics-exporter-config.yml:/etc/azure-metrics-exporter/config.yml:ro
     depends_on:
       - prometheus
       - grafana

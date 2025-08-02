@@ -42,3 +42,16 @@ scrape_configs:
     metric_relabel_configs:
       - target_label: provider
         replacement: "django-gcp"
+
+  #TODO skonfigurować pobieranie metryk z Azure Container App
+  - job_name: "azure_webapp_metrics"
+    scrape_interval: 60s
+    metrics_path: /probe/metrics/list
+    params:
+      subscription: ["${AZURE_SUBSCRIPTION_ID_PRIVATE}"]
+      resourceType: ["Microsoft.Web/sites"]
+      metric: ["CpuTime", "HttpRequests", "MemoryWorkingSet"]
+      interval: ["PT1M"]
+      aggregation: ["average"]
+    static_configs:
+      - targets: ["azure-metrics-exporter:8081"]
