@@ -64,6 +64,7 @@ services:
   stackdriver-exporter-gcp:
     image: quay.io/prometheuscommunity/stackdriver-exporter:latest
     restart: unless-stopped
+    # TODO ustalić konktetne zmienne nie cały plik
     env_file:
       - .env
     environment:
@@ -90,18 +91,22 @@ services:
       - grafana
 
   azure-metrics-exporter:
-    image: ghcr.io/robustperception/azure_metrics_exporter:latest
+    image: webdevops/azure-metrics-exporter:latest
+    container_name: azure-metrics-exporter
     restart: unless-stopped
-    environment:
-      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
-      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
-      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
-      - AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID}
-      - EXPORTER_CONFIG=/etc/azure_metrics_exporter/config.yaml
-    volumes:
-      - ./azure-metrics-exporter-config.yaml:/etc/azure_metrics_exporter/config.yaml:ro
     ports:
       - "9276:9276"
+    environment:
+      # AAD Service Principal
+      AZURE_TENANT_ID: "${AZURE_TENANT_ID_PRIVATE}"
+      AZURE_CLIENT_ID: "${AZURE_CLIENT_ID_PRIVATE}"
+      AZURE_CLIENT_SECRET: "${AZURE_CLIENT_SECRET_PRIVATE}"
+      AZURE_SUBSCRIPTION_ID: "${AZURE_SUBSCRIPTION_ID_PRIVATE}"
+      AZURE_METRICS_EXPORTER_CONFIG: "/etc/azure-metrics-exporter/config.yml"
+      AZURE_EXPORTER_INTERVAL: "60s"
+      AZURE_EXPORTER_LOG_LEVEL: "info"
+    volumes:
+      - ./azure-metrics-exporter-config.yml:/etc/azure-metrics-exporter/config.yml:ro
     depends_on:
       - prometheus
       - grafana

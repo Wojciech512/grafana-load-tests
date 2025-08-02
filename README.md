@@ -95,6 +95,23 @@ terraform validate -var-file="cloud_env.tfvars"
 
 # Azure
 
+```
+$Env:AZURE_TENANT_ID = az account show --query tenantId -o tsv
+```
+
+```
+$Env:AZURE_SUBSCRIPTION_ID = az account show --query id -o tsv
+```
+
+```
+$spJson = az ad sp create-for-rbac `
+  --name "metrics-exporter-sp" `
+  --role "Monitoring Reader" `
+  --scopes "/subscriptions/$($Env:AZURE_SUBSCRIPTION_ID)" `
+  --sdk-auth `
+  -o json
+```
+
 ## ACR
 
 ```

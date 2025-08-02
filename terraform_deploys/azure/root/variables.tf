@@ -11,6 +11,9 @@ variable "AZURE_POSTGRESQL_NAME" { sensitive = true }
 variable "AZURE_POSTGRESQL_PASSWORD" { sensitive = true }
 variable "AZURE_POSTGRESQL_USERNAME" { sensitive = true }
 
+variable "AZURE_SUBSCRIPTION_ID_POLSL" { sensitive = true }
+variable "AZURE_SUBSCRIPTION_ID_PRIVATE" { sensitive = true }
+
 resource "random_string" "suffix" {
   length  = 5
   special = false
