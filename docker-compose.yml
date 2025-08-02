@@ -1,41 +1,12 @@
 version: "3.9"
-
-#2.1 Azure Monitor
-#Azure Monitor automatycznie gromadzi platformowe metryki (CPU, pamięć, dysk, sieć, instancje, autoscaling) bez dodatkowych opłat za ich zbieranie i wizualizację w Metrics Explorer
-#Microsoft Learn. Niektóre metryki gościa (guest metrics) wymagają zainstalowania agenta, ale standardowe platformowe są dostępne „od ręki”
-#Microsoft Learn. Ceny za logi i dodatkowe zapytania analizujące (Log Analytics) zaczynają się od $0.10 GB dla eksportu i $0.005 GB dla zapytań, a za metryki w Metrics Explorer płaci się zgodnie z zużyciem (pay-as-you-go)
-#Azure.
-
-#2.2 Google Cloud Monitoring
-#Cloud Monitoring (dawniej Stackdriver) oferuje bibliotekę wbudowanych dashboardów i widżetów do szybkiego wyświetlania metryk CPU, pamięci, ruchu sieciowego i autoscalingu bez konieczności instalacji eksportera
-#Google Cloud. Darmowy próg obejmuje 1 mln zwróconych szeregów czasowych miesięcznie, a kolejne kosztują $0.50 za milion zwróconych serii, co przekłada się na około $3.82 miesięcznie dla typowego zestawu 10 metryk śledzonych co 5 minut przez 30 dni
-#Google Cloud.
-
 #TODO DODAĆ ADNOTACJE DO METRYK KONTENERA? NIE LEPIEJ WYPISYWAĆ PRZEDZIAŁY CZASOWE I NA PODSTAWIE TEGO FILTROWAĆ?
 #TODO uruchomić testy i zweryfikować jak zbieraja się dane oraz czy widać na każdym rozpoczęcie i zakończenie testów
-#TODO przygotować 3x terraform cloud run + clod sql dla gcp jak najmniejsze koszty
-#TODO przygotować z testy nastawić się na jak najmniejsze koszty
-#TODO przygotować 3x terraform app service + flex db dla azure jak najmniejsze koszty
 #TODO przygotować monitoring na azure (CPU, RAM, sieć, autoscaling) wdrożyć identyczne wykresy dla azure
 
-#TODO USTALIĆ KONKRETNE WERSJE ZAMIAST :LATEST
-
 services:
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--web.enable-remote-write-receiver"
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
-    ports:
-      - "9090:9090"
-
   grafana:
     image: grafana/grafana:latest
-    container_name: grafana
+    restart: unless-stopped
     ports:
       - "3000:3000"
     volumes:
@@ -51,36 +22,48 @@ services:
     depends_on:
       - prometheus
 
-  gcp-sql-proxy:
-    image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.15.2-alpine
-    container_name: gcp-sql-proxy
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
     command:
-      - "--debug"
-      - "--address=0.0.0.0"
-      - "--port=5432"
-      - "--credentials-file=/secrets/gcp- .json"
-      - "${GCP_PROJECT_ID}:${GCP_REGION}:${GCP_PROJECT_DB_NAME}"
-      - "--prometheus"
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-remote-write-receiver"
     volumes:
-      - ./terraform_deploys/gcp/gcp-credentials.json:/secrets/gcp-credentials.json:ro
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
     ports:
-      - "5432:5432"
-      - "9104:9104"
+      - "9090:9090"
 
-  postgres_exporter-proxy:
-    image: wrouesnel/postgres_exporter
-    depends_on:
-      - gcp-sql-proxy
-    env_file:
-      - .env
-    environment:
-      DATA_SOURCE_NAME: "postgresql://${GOOGLE_POSTGRESQL_USERNAME}:${GOOGLE_POSTGRESQL_PASSWORD}@gcp-sql-proxy:5432/${GOOGLE_POSTGRESQL_NAME}?sslmode=disable"
-    ports:
-      - "9187:9187"
+  #  gcp-sql-proxy:
+  #    image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.15.2-alpine
+  #    container_name: gcp-sql-proxy
+  #    command:
+  #      - "--debug"
+  #      - "--address=0.0.0.0"
+  #      - "--port=5432"
+  #      - "--credentials-file=/secrets/gcp- .json"
+  #      - "${GCP_PROJECT_ID}:${GCP_REGION}:${GCP_PROJECT_DB_NAME}"
+  #      - "--prometheus"
+  #    volumes:
+  #      - ./terraform_deploys/gcp/gcp-credentials.json:/secrets/gcp-credentials.json:ro
+  #    ports:
+  #      - "5432:5432"
+  #      - "9104:9104"
+
+  #  postgres_exporter-proxy:
+  #    image: wrouesnel/postgres_exporter
+  #    depends_on:
+  #      - gcp-sql-proxy
+  #    env_file:
+  #      - .env
+  #    environment:
+  #      DATA_SOURCE_NAME: "postgresql://${GOOGLE_POSTGRESQL_USERNAME}:${GOOGLE_POSTGRESQL_PASSWORD}@gcp-sql-proxy:5432/${GOOGLE_POSTGRESQL_NAME}?sslmode=disable"
+  #    ports:
+  #      - "9187:9187"
 
   stackdriver-exporter-gcp:
     image: quay.io/prometheuscommunity/stackdriver-exporter:latest
-    container_name: sd-exporter
+    restart: unless-stopped
     env_file:
       - .env
     environment:
@@ -102,6 +85,26 @@ services:
       - ./terraform_deploys/gcp/gcp-credentials.json:/etc/stackdriver/gcp-credentials.json:ro
     ports:
       - "8080:8080"
+    depends_on:
+      - prometheus
+      - grafana
+
+  azure-metrics-exporter:
+    image: ghcr.io/robustperception/azure_metrics_exporter:latest
+    restart: unless-stopped
+    environment:
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID}
+      - EXPORTER_CONFIG=/etc/azure_metrics_exporter/config.yaml
+    volumes:
+      - ./azure-metrics-exporter-config.yaml:/etc/azure_metrics_exporter/config.yaml:ro
+    ports:
+      - "9276:9276"
+    depends_on:
+      - prometheus
+      - grafana
 
   k6-base: &common
     build:
@@ -124,36 +127,33 @@ services:
       - ./load-tests/tests/:/tests
     profiles: ["loadtests"]
 
-  #TODO 2x 2x dla różnych url aplikacji
-  #TODO upewnić się czy serwisy dadzą radę pracować równocześnie 3x, sprawdizć podzespoły
-  #TODO dodać tagi rozróżniające źródła w prometheus
-  #  todo ZROBIĆ 2 RUNY KAŻDEGO Z TESTÓW RÓWNOLEGLE??? ZAPYTAĆ SIĘ
-  k6-gcp-low:
-    extends: { service: k6-base }
-    environment:
-      - BASE_URL=https://praca-magisterska-django-app-1001731509124.europe-central2.run.app
-      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
+  # TODO upewnić się czy serwisy z k6 dadzą radę pracować równocześnie 3x lub 6x (gcp + azure), sprawdizć wykorzystanie podzespołów
+  # TODO dodać tagi rozróżniające źródła w prometheus
 
-  k6-gcp-high:
-    extends: { service: k6-base }
-    environment:
-      - BASE_URL=https://praca-magisterska-django-app-1001731509124.europe-central2.run.app
-      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
-
-  k6-azure-low:
-    extends: { service: k6-base }
-    environment:
-      - BASE_URL=---
-      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
-
-  k6-azure-high:
-    extends: { service: k6-base }
-    environment:
-      - BASE_URL=---
-      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
+#  k6-gcp-low:
+#    extends: { service: k6-base }
+#    environment:
+#      - BASE_URL=https://praca-magisterska-django-app-1001731509124.europe-central2.run.app
+#      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
+#
+#  k6-gcp-high:
+#    extends: { service: k6-base }
+#    environment:
+#      - BASE_URL=https://praca-magisterska-django-app-1001731509124.europe-central2.run.app
+#      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
+#
+#  k6-azure-low:
+#    extends: { service: k6-base }
+#    environment:
+#      - BASE_URL=---
+#      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
+#
+#  k6-azure-high:
+#    extends: { service: k6-base }
+#    environment:
+#      - BASE_URL=---
+#      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
 
 volumes:
   grafana_data: {}
   prometheus_data: {}
-  loki_data: {}
-  logs: {}
