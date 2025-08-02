@@ -1,0 +1,42 @@
+active_directory_authority_url: "https://login.microsoftonline.com/"
+resource_manager_url: "https://management.azure.com/"
+
+credentials:
+  subscription_id: "${AZURE_SUBSCRIPTION_ID}"
+  tenant_id: "${AZURE_TENANT_ID}"
+  client_id: "${AZURE_CLIENT_ID}"
+  client_secret: "${AZURE_CLIENT_SECRET}"
+
+targets:
+  - resource: "/subscriptions/${AZURE_SUBSCRIPTION_ID}/resourceGroups/my-resource-group/providers/Microsoft.Web/sites/web-app-low"
+    metric_namespace: "Microsoft.Web/sites"
+    metrics:
+      - name: "CpuTime"
+      - name: "CpuPercentage"
+      - name: "MemoryWorkingSet"
+      - name: "BytesReceived"
+      - name: "BytesSent"
+      - name: "InstanceCount"
+      - name: "AverageResponseTime"
+
+  - resource: "/subscriptions/${AZURE_SUBSCRIPTION_ID}/resourceGroups/my-resource-group/providers/Microsoft.Web/sites/web-app-medium"
+    metric_namespace: "Microsoft.Web/sites"
+    metrics:
+      - name: "CpuTime"
+      - name: "CpuPercentage"
+      - name: "MemoryWorkingSet"
+      - name: "BytesReceived"
+      - name: "BytesSent"
+      - name: "InstanceCount"
+      - name: "AverageResponseTime"
+
+  - resource: "/subscriptions/${AZURE_SUBSCRIPTION_ID}/resourceGroups/my-resource-group/providers/Microsoft.Web/sites/web-app-high"
+    metric_namespace: "Microsoft.Web/sites"
+    metrics:
+      - name: "CpuTime"
+      - name: "CpuPercentage"
+      - name: "MemoryWorkingSet"
+      - name: "BytesReceived"
+      - name: "BytesSent"
+      - name: "InstanceCount"
+      - name: "AverageResponseTime"
