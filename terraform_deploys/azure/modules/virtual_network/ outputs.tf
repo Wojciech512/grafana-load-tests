@@ -1,9 +1,9 @@
-output "vnet_id" {
+output "vnet_id_output" {
   description = "ID of the virtual network"
   value       = azurerm_virtual_network.this.id
 }
 
-output "subnet_ids" {
+output "subnet_ids_output" {
   description = "Map of subnet IDs"
   value = {
     for k, s in azurerm_subnet.this :

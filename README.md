@@ -125,7 +125,7 @@ az acr login --name pracamagisterskaacr.azurecr.io/
 ```
  docker push pracamagisterskaacr.azurecr.io/ecommerce-app:latest
 ```
-
+https://medium.com/@dinh.nt/azure-terraform-deploy-a-secure-application-container-apps-postgresql-and-redis-4a5fc6cb7877
 ## Usługi hostowania aplikacji (container web app)
 
 - B1 to absolutne minimum — wystarczy na lekkie testy i prototypy, przy koszcie ~13 USD/mies.

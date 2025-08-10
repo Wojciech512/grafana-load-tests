@@ -1,5 +1,5 @@
 resource "azurerm_private_dns_zone" "this" {
-  name                = "${var.name_input}${var.random_string_input}"
+  name                = var.name_input
   resource_group_name = var.resource_group_name_input
 }
 
