@@ -8,7 +8,7 @@ module "resource_group" {
 module "virtual_network" {
   source = "../modules/virtual_network"
 
-  virtual_network_name_input = "app-postgress-virtual-network-2"
+  virtual_network_name_input = "app-postgress-virtual-network"
   address_space_input        = ["10.0.0.0/16"]
   dns_servers_input          = ["168.63.129.16"]
 
@@ -64,8 +64,8 @@ module "private_endpoint" {
 
   private_endpoint_service_ids = {
     db_b1ms = module.database.database_ids["database-b1ms-postgres"]
-    db_b2s  = module.database.database_ids["database-b2s-postgres"]
-    db_b2ms = module.database.database_ids["database-b2ms-postgres"]
+    # db_b2s  = module.database.database_ids["database-b2s-postgres"]
+    # db_b2ms = module.database.database_ids["database-b2ms-postgres"]
   }
 
   private_service_connection_name_prefix_input = "database-private-service-connection"
@@ -95,12 +95,12 @@ module "database" {
     database-b1ms-postgres = {
       sku_name_input = "B_Standard_B1ms"
     }
-    database-b2s-postgres = {
-      sku_name_input = "B_Standard_B2s"
-    }
-    database-b2ms-postgres = {
-      sku_name_input = "B_Standard_B2ms"
-    }
+    # database-b2s-postgres = {
+    #   sku_name_input = "B_Standard_B2s"
+    # }
+    # database-b2ms-postgres = {
+    #   sku_name_input = "B_Standard_B2ms"
+    # }
   }
 }
 
@@ -128,16 +128,16 @@ module "container_app" {
       memory_input        = "2.0Gi",
       database_host_input = module.database.database_names["database-b1ms-postgres"]
     },
-    medium = {
-      cpu_input           = 2.0,
-      memory_input        = "4.0Gi",
-      database_host_input = module.database.database_names["database-b2s-postgres"]
-    },
-    high = {
-      cpu_input           = 3.0,
-      memory_input        = "6.0Gi",
-      database_host_input = module.database.database_names["database-b2ms-postgres"]
-    }
+    # medium = {
+    #   cpu_input           = 2.0,
+    #   memory_input        = "4.0Gi",
+    #   database_host_input = module.database.database_names["database-b2s-postgres"]
+    # },
+    # high = {
+    #   cpu_input           = 3.0,
+    #   memory_input        = "6.0Gi",
+    #   database_host_input = module.database.database_names["database-b2ms-postgres"]
+    # }
   }
 
   common_app_settings_input = {
