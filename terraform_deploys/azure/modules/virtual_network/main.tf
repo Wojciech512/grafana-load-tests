@@ -1,7 +1,6 @@
 resource "azurerm_virtual_network" "this" {
   name                = var.virtual_network_name_input
   address_space       = var.address_space_input
-  dns_servers         = var.dns_servers_input
   resource_group_name = var.resource_group_name_input
   location            = var.resource_group_location_input
 }

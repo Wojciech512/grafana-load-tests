@@ -17,11 +17,6 @@ variable "address_space_input" {
   type        = list(string)
 }
 
-variable "dns_servers_input" {
-  description = "List of DNS servers"
-  type        = list(string)
-}
-
 variable "subnets_input" {
   description = "Map of subnets to create"
   type = map(object({

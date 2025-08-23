@@ -11,7 +11,6 @@ module "virtual_network" {
 
   virtual_network_name_input = "app-postgress-virtual-network"
   address_space_input        = ["10.0.0.0/16"]
-  dns_servers_input          = ["168.63.129.16"]
 
   resource_group_name_input     = module.resource_group.name_output
   resource_group_location_input = module.resource_group.location_output

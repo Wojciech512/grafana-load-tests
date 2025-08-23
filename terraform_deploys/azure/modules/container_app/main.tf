@@ -71,7 +71,7 @@ resource "azurerm_container_app_environment" "this" {
   }
 
   timeouts {
-    create = "60m"
-    update = "60m"
+    create = "180m"
+    update = "180m"
   }
 }
