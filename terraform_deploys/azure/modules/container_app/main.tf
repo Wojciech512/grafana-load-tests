@@ -18,6 +18,9 @@ resource "azurerm_container_app" "this" {
   }
 
   template {
+    min_replicas = 0
+    max_replicas = 1
+
     container {
       name   = each.key
       image  = "${var.docker_registry_url_input}/${var.docker_image_name_input}"
@@ -45,8 +48,7 @@ resource "azurerm_container_app" "this" {
         }
       }
 
-      # min_replicas = 0
-      # max_replicas = 1
+
     }
   }
 
