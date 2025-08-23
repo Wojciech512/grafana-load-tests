@@ -3,6 +3,10 @@ variable "databases_config_input" {
     sku_name_input = string
   }))
 }
+
+variable "delegated_subnet_id_input" { type = string }
+variable "private_dns_zone_id_input" { type = string }
+
 variable "random_string_input" { type = string }
 variable "resource_group_name_input" { type = string }
 variable "location_input" { type = string }

@@ -4,6 +4,9 @@ resource "azurerm_postgresql_flexible_server" "this" {
   name     = "${each.key}-database-${var.random_string_input}"
   sku_name = each.value.sku_name_input
 
+  delegated_subnet_id = var.delegated_subnet_id_input
+  private_dns_zone_id = var.private_dns_zone_id_input
+
   resource_group_name           = var.resource_group_name_input
   location                      = var.location_input
   administrator_login           = var.administrator_login_input
@@ -14,7 +17,4 @@ resource "azurerm_postgresql_flexible_server" "this" {
   geo_redundant_backup_enabled  = var.geo_redundant_backup_enabled_input
   public_network_access_enabled = var.public_network_access_enabled_input
   zone                          = "1"
-  #  lifecycle {
-  #    prevent_destroy = true
-  #  }
 }

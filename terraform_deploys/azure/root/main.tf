@@ -57,33 +57,37 @@ module "private_dns" {
   virtual_network_id_input  = module.virtual_network.vnet_id_output
 }
 
-module "private_endpoint" {
-  source = "../modules/private_endpoint"
-
-  location_input    = module.resource_group.location_output
-  name_prefix_input = "database-private-endpoint"
-
-  private_endpoint_service_ids = {
-    db_b1ms = module.database.database_ids["database-b1ms-postgres"]
-    # db_b2s  = module.database.database_ids["database-b2s-postgres"]
-    # db_b2ms = module.database.database_ids["database-b2ms-postgres"]
-  }
-
-  private_service_connection_name_prefix_input = "database-private-service-connection"
-  resource_group_name_input                    = module.resource_group.name_output
-  subnet_id_input                              = module.virtual_network.subnet_ids_output["private-endpoint-subnet"]
-  subresource_names_input                      = ["postgresqlServer"]
-
-  private_dns_zone_group_name_input = "dns-group"
-  private_dns_zone_ids_input        = [module.private_dns.id_output]
-}
+# module "private_endpoint" {
+#   source = "../modules/private_endpoint"
+#
+#   location_input    = module.resource_group.location_output
+#   name_prefix_input = "database-private-endpoint"
+#
+#   private_endpoint_service_ids = {
+#     db_b1ms = module.database.database_ids["database-b1ms-postgres"]
+#     # db_b2s  = module.database.database_ids["database-b2s-postgres"]
+#     # db_b2ms = module.database.database_ids["database-b2ms-postgres"]
+#   }
+#
+#   private_service_connection_name_prefix_input = "database-private-service-connection"
+#   resource_group_name_input                    = module.resource_group.name_output
+#   subnet_id_input                              = module.virtual_network.subnet_ids_output["private-endpoint-subnet"]
+#   subresource_names_input                      = ["postgresqlServer"]
+#
+#   private_dns_zone_group_name_input = "dns-group"
+#   private_dns_zone_ids_input        = [module.private_dns.id_output]
+# }
 
 module "database" {
   source = "../modules/postgresql"
 
+  random_string_input = random_string.suffix.result
+
+  delegated_subnet_id_input = module.virtual_network.subnet_ids_output["database-subnet"]
+  private_dns_zone_id_input = module.private_dns.id_output
+
   administrator_login_input           = var.AZURE_POSTGRESQL_USERNAME
   administrator_password_input        = var.AZURE_POSTGRESQL_PASSWORD
-  random_string_input                 = random_string.suffix.result
   resource_group_name_input           = module.resource_group.name_output
   location_input                      = module.resource_group.location_output
   backup_retention_days_input         = 7
