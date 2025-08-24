@@ -6,6 +6,10 @@ resource "azurerm_container_app" "this" {
   container_app_environment_id = azurerm_container_app_environment.this.id
   revision_mode                = "Single"
 
+  identity {
+    type = var.identity_type_input
+  }
+
   ingress {
     external_enabled           = true
     target_port                = tonumber(var.app_port_input)
@@ -50,10 +54,6 @@ resource "azurerm_container_app" "this" {
 
 
     }
-  }
-
-  identity {
-    type = var.identity_type_input
   }
 }
 

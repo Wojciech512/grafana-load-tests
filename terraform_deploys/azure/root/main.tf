@@ -1,9 +1,8 @@
 module "resource_group" {
   source = "../modules/resource_group"
 
-  name_input = "praca-magisterska-proj-azure"
-  # location_input = "Poland Central"
-  location_input = "West Europe"
+  name_input     = "praca-magisterska-proj-azure"
+  location_input = "Poland Central"
 }
 
 module "virtual_network" {
