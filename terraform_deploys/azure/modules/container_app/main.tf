@@ -10,6 +10,11 @@ resource "azurerm_container_app" "this" {
     type = var.identity_type_input
   }
 
+  registry {
+    server   = var.docker_registry_url_input
+    identity = "System"
+  }
+
   ingress {
     external_enabled           = true
     target_port                = tonumber(var.app_port_input)
