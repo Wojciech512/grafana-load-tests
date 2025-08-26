@@ -1,21 +1,21 @@
 variable "random_string_input" {
-  description = "Random suffix for naming Web Apps"
+  description = "Random suffix for naming Apps"
   type        = string
 }
 
 variable "identity_type_input" {
-  description = "Random suffix for naming Web Apps"
+  description = "Random suffix for naming Apps"
   type        = string
-  default     = "SystemAssigned"
+  default     = "SystemAssigned, UserAssigned"
 }
 
 variable "resource_group_name_input" {
-  description = "Name of the resource group where Web Apps will be deployed"
+  description = "Name of the resource group where Apps will be deployed"
   type        = string
 }
 
 variable "location_input" {
-  description = "Azure region for the Web Apps"
+  description = "Azure region for the Apps"
   type        = string
 }
 

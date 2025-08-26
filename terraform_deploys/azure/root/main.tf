@@ -1,7 +1,7 @@
 module "resource_group" {
   source = "../modules/resource_group"
 
-  name_input     = "praca-magisterska-proj-azure"
+  name_input     = "praca-magisterska-proj-azure-2"
   location_input = "Poland Central"
 }
 
@@ -55,27 +55,6 @@ module "private_dns" {
   virtual_network_id_input  = module.virtual_network.vnet_id_output
 }
 
-# module "private_endpoint" {
-#   source = "../modules/private_endpoint"
-#
-#   location_input    = module.resource_group.location_output
-#   name_prefix_input = "database-private-endpoint"
-#
-#   private_endpoint_service_ids = {
-#     db_b1ms = module.database.database_ids["database-b1ms-postgres"]
-#     # db_b2s  = module.database.database_ids["database-b2s-postgres"]
-#     # db_b2ms = module.database.database_ids["database-b2ms-postgres"]
-#   }
-#
-#   private_service_connection_name_prefix_input = "database-private-service-connection"
-#   resource_group_name_input                    = module.resource_group.name_output
-#   subnet_id_input                              = module.virtual_network.subnet_ids_output["private-endpoint-subnet"]
-#   subresource_names_input                      = ["postgresqlServer"]
-#
-#   private_dns_zone_group_name_input = "dns-group"
-#   private_dns_zone_ids_input        = [module.private_dns.id_output]
-# }
-
 module "database" {
   source = "../modules/postgresql"
 
@@ -98,12 +77,12 @@ module "database" {
     database-b1ms-postgres = {
       sku_name_input = "B_Standard_B1ms"
     }
-    # database-b2s-postgres = {
-    #   sku_name_input = "B_Standard_B2s"
-    # }
-    # database-b2ms-postgres = {
-    #   sku_name_input = "B_Standard_B2ms"
-    # }
+    database-b2s-postgres = {
+      sku_name_input = "B_Standard_B2s"
+    }
+    database-b2ms-postgres = {
+      sku_name_input = "B_Standard_B2ms"
+    }
   }
 }
 
@@ -129,18 +108,18 @@ module "container_app" {
     low = {
       cpu_input           = 1.0,
       memory_input        = "2.0Gi",
-      database_host_input = module.database.database_names["database-b1ms-postgres"]
+      database_host_input = module.database.server_fqdns_output["database-b1ms-postgres"]
     },
-    # medium = {
-    #   cpu_input           = 2.0,
-    #   memory_input        = "4.0Gi",
-    #   database_host_input = module.database.database_names["database-b2s-postgres"]
-    # },
-    # high = {
-    #   cpu_input           = 3.0,
-    #   memory_input        = "6.0Gi",
-    #   database_host_input = module.database.database_names["database-b2ms-postgres"]
-    # }
+    medium = {
+      cpu_input           = 2.0,
+      memory_input        = "4.0Gi",
+      database_host_input = module.database.server_fqdns_output["database-b2s-postgres"]
+    },
+    high = {
+      cpu_input           = 4.0,
+      memory_input        = "7.0Gi",
+      database_host_input = module.database.server_fqdns_output["database-b2ms-postgres"]
+    }
   }
 
   common_app_settings_input = {
@@ -159,82 +138,4 @@ module "container_app" {
     "CSRF_TRUSTED_ORIGINS" = var.CSRF_TRUSTED_ORIGINS
   }
 }
-
-# module "service_plan" {
-#   source = "../modules/service_plan"
-#
-#   random_string_input = random_string.suffix.result
-#
-#   service_plan_config_input = {
-#     web-app-plan-b1-linux = {
-#       location_resource_group_input = module.resource_group.location_output
-#       resource_group_name_input     = module.resource_group.name_output
-#       os_type_input                 = "Linux"
-#       sku_name_input                = "B1"
-#     }
-#
-#     web-app-plan-b2-linux = {
-#       location_resource_group_input = module.resource_group.location_output
-#       resource_group_name_input     = module.resource_group.name_output
-#       os_type_input                 = "Linux"
-#       sku_name_input                = "B2"
-#     }
-#
-#     web-app-plan-b3-linux = {
-#       location_resource_group_input = module.resource_group.location_output
-#       resource_group_name_input     = module.resource_group.name_output
-#       os_type_input                 = "Linux"
-#       sku_name_input                = "B3"
-#     }
-#   }
-# }
-
-# module "web_app" {
-#   source = "../modules/web_app"
-#
-#   docker_image_name_input   = "ecommerce-app:latest"
-#   docker_registry_url_input = "https://${module.container_registry.login_server}"
-#   acr_registry_id_input     = module.container_registry.id
-#   location_input            = module.resource_group.location_output
-#   resource_group_name_input = module.resource_group.name_output
-#   subnet_id_input           = module.virtual_network.subnet_ids["app-subnet"]
-#
-#   random_string_input = random_string.suffix.result
-#
-#
-#   web_app_config_input = {
-#     web-app-b1-linux = {
-#       service_plan_id_input = module.service_plan.service_plan_ids["web-app-plan-b1-linux"]
-#       database_host_input   = module.database.database_names["database-b1ms-postgres"]
-#     }
-#
-#     web-app-b2-linux = {
-#       service_plan_id_input = module.service_plan.service_plan_ids["web-app-plan-b2-linux"]
-#       database_host_input   = module.database.database_names["database-b2s-postgres"]
-#     }
-#
-#     web-app-b3-linux = {
-#       service_plan_id_input = module.service_plan.service_plan_ids["web-app-plan-b3-linux"]
-#       database_host_input   = module.database.database_names["database-b2ms-postgres"]
-#     }
-#   }
-#
-#   common_app_settings_input = {
-#     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
-#     "PORT"                                = var.APP_PORT
-#     "WEBSITES_PORT"                       = var.APP_PORT
-#
-#     "AZURE_POSTGRESQL_NAME"     = var.AZURE_POSTGRESQL_NAME
-#     "AZURE_POSTGRESQL_USERNAME" = var.AZURE_POSTGRESQL_USERNAME
-#     "AZURE_POSTGRESQL_PASSWORD" = var.AZURE_POSTGRESQL_PASSWORD
-#     "AZURE_POSTGRESQL_PORT"     = var.AZURE_POSTGRESQL_PORT
-#
-#     "DEBUG"                = var.DEBUG
-#     "ALLOWED_HOSTS"        = var.ALLOWED_HOSTS
-#     "SECRET_KEY"           = var.SECRET_KEY
-#     "EMAIL_HOST_USER"      = var.EMAIL_HOST_USER
-#     "EMAIL_HOST_PASSWORD"  = var.EMAIL_HOST_PASSWORD
-#     "CSRF_TRUSTED_ORIGINS" = var.CSRF_TRUSTED_ORIGINS
-#   }
-# }
 

@@ -1,3 +1,15 @@
+resource "azurerm_user_assigned_identity" "acr_pull" {
+  name                = "aca-acr-pull-identity"
+  location            = var.location_input
+  resource_group_name = var.resource_group_name_input
+}
+
+resource "azurerm_role_assignment" "this" {
+  scope                = var.acr_registry_id_input
+  role_definition_name = var.role_definition_name_input
+  principal_id         = azurerm_user_assigned_identity.acr_pull.principal_id
+}
+
 resource "azurerm_container_app" "this" {
   for_each = var.plan_profiles_input
 
@@ -7,12 +19,13 @@ resource "azurerm_container_app" "this" {
   revision_mode                = "Single"
 
   identity {
-    type = var.identity_type_input
+    type         = var.identity_type_input
+    identity_ids = [azurerm_user_assigned_identity.acr_pull.id]
   }
 
   registry {
     server   = var.docker_registry_url_input
-    identity = "System"
+    identity = azurerm_user_assigned_identity.acr_pull.id
   }
 
   ingress {
@@ -46,7 +59,7 @@ resource "azurerm_container_app" "this" {
       }
       env {
         name  = "AZURE_POSTGRESQL_HOST"
-        value = "${each.value.database_host_input}.privatelink.postgres.database.azure.com"
+        value = each.value.database_host_input
       }
 
       dynamic "env" {
@@ -60,6 +73,10 @@ resource "azurerm_container_app" "this" {
 
     }
   }
+  depends_on = [
+    azurerm_role_assignment.this
+  ]
+
 }
 
 resource "azurerm_container_app_environment" "this" {
@@ -80,3 +97,6 @@ resource "azurerm_container_app_environment" "this" {
     update = "180m"
   }
 }
+
+
+
