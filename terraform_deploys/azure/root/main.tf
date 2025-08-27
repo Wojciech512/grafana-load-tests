@@ -1,7 +1,7 @@
 module "resource_group" {
   source = "../modules/resource_group"
 
-  name_input     = "praca-magisterska-proj-azure-2"
+  name_input     = "praca-magisterska-proj-azure"
   location_input = "Poland Central"
 }
 
@@ -80,9 +80,9 @@ module "database" {
     database-b2s-postgres = {
       sku_name_input = "B_Standard_B2s"
     }
-    database-b2ms-postgres = {
-      sku_name_input = "B_Standard_B2ms"
-    }
+    # database-b2ms-postgres = {
+    #   sku_name_input = "B_Standard_B2ms"
+    # }
   }
 }
 
@@ -115,11 +115,11 @@ module "container_app" {
       memory_input        = "4.0Gi",
       database_host_input = module.database.server_fqdns_output["database-b2s-postgres"]
     },
-    high = {
-      cpu_input           = 4.0,
-      memory_input        = "7.0Gi",
-      database_host_input = module.database.server_fqdns_output["database-b2ms-postgres"]
-    }
+    # high = {
+    #   cpu_input           = 4.0,
+    #   memory_input        = "8.0Gi",
+    #   database_host_input = module.database.server_fqdns_output["database-b2ms-postgres"]
+    # }
   }
 
   common_app_settings_input = {

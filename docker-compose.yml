@@ -127,32 +127,35 @@ services:
       - ./load-tests/tests/:/tests
     profiles: ["loadtests"]
 
-  # TODO upewnić się czy serwisy z k6 dadzą radę pracować równocześnie 3x lub 6x (gcp + azure), sprawdizć wykorzystanie podzespołów
-  # TODO dodać tagi rozróżniające źródła w prometheus
+  k6-gcp-low:
+    extends: { service: k6-base }
+    environment:
+      - BASE_URL=---
+      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
 
-#  k6-gcp-low:
-#    extends: { service: k6-base }
-#    environment:
-#      - BASE_URL=https://praca-magisterska-django-app-1001731509124.europe-central2.run.app
-#      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
-#
-#  k6-gcp-high:
-#    extends: { service: k6-base }
-#    environment:
-#      - BASE_URL=https://praca-magisterska-django-app-1001731509124.europe-central2.run.app
-#      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
-#
-#  k6-azure-low:
-#    extends: { service: k6-base }
-#    environment:
-#      - BASE_URL=---
-#      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
-#
-#  k6-azure-high:
-#    extends: { service: k6-base }
-#    environment:
-#      - BASE_URL=---
-#      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
+  k6-gcp-high:
+    extends: { service: k6-base }
+    environment:
+      - BASE_URL=---
+      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
+
+  k6-azure-low:
+    extends: { service: k6-base }
+    environment:
+      - BASE_URL=---
+      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
+
+  k6-azure-medium:
+    extends: { service: k6-base }
+    environment:
+      - BASE_URL=https://medium-y3svv.nicedune-24229e78.polandcentral.azurecontainerapps.io/
+      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
+
+  k6-azure-high:
+    extends: { service: k6-base }
+    environment:
+      - BASE_URL=---
+      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
 
 volumes:
   grafana_data: {}
