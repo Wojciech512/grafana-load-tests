@@ -43,15 +43,86 @@ scrape_configs:
       - target_label: provider
         replacement: "django-gcp"
 
-  #TODO skonfigurować pobieranie metryk z Azure Container App
-  - job_name: "azure_webapp_metrics"
+  - job_name: "azure_containerapps_low"
     scrape_interval: 60s
     metrics_path: /probe/metrics/list
     params:
-      subscription: ["${AZURE_SUBSCRIPTION_ID_PRIVATE}"]
-      resourceType: ["Microsoft.Web/sites"]
-      metric: ["CpuTime", "HttpRequests", "MemoryWorkingSet"]
+      subscription: ["f3e502d3-1128-4856-8e43-14addd9b52cd"]
+      resource:
+        - "/subscriptions/f3e502d3-1128-4856-8e43-14addd9b52cd/resourceGroups/praca-magisterska-proj-azure-2/providers/Microsoft.App/containerApps/low-7m4rp"
+      metricNamespace: ["Microsoft.App/containerApps"]
+      resourceType: ["Microsoft.App/containerApps"]
+      metric:
+        [
+          "CpuUsage",
+          "MemoryWorkingSetBytes",
+          "NetworkBytesReceived",
+          "NetworkBytesTransmitted",
+          "Requests",
+          "ReplicaCount",
+        ]
       interval: ["PT1M"]
-      aggregation: ["average"]
+      timespan: ["PT5M"]
+      aggregation: ["Average"]
     static_configs:
-      - targets: ["azure-metrics-exporter:8081"]
+      - targets: ["azure-metrics-exporter:8080"]
+        labels:
+          app: "aca-low"
+          service: "aca-low"
+          provider: "azure"
+
+  - job_name: "azure_containerapps_medium"
+    scrape_interval: 60s
+    metrics_path: /probe/metrics/list
+    params:
+      subscription: ["f3e502d3-1128-4856-8e43-14addd9b52cd"]
+      resource:
+        - "/subscriptions/f3e502d3-1128-4856-8e43-14addd9b52cd/resourceGroups/praca-magisterska-proj-azure-2/providers/Microsoft.App/containerApps/medium-7m4rp"
+      metricNamespace: ["Microsoft.App/containerApps"]
+      resourceType: ["Microsoft.App/containerApps"]
+      metric:
+        [
+          "CpuUsage",
+          "MemoryWorkingSetBytes",
+          "NetworkBytesReceived",
+          "NetworkBytesTransmitted",
+          "Requests",
+          "ReplicaCount",
+        ]
+      interval: ["PT1M"]
+      timespan: ["PT5M"]
+      aggregation: ["Average"]
+    static_configs:
+      - targets: ["azure-metrics-exporter:8080"]
+        labels:
+          app: "aca-medium"
+          service: "aca-medium"
+          provider: "azure"
+
+  - job_name: "azure_containerapps_high"
+    scrape_interval: 60s
+    metrics_path: /probe/metrics/list
+    params:
+      subscription: ["f3e502d3-1128-4856-8e43-14addd9b52cd"]
+      resource:
+        - "/subscriptions/f3e502d3-1128-4856-8e43-14addd9b52cd/resourceGroups/praca-magisterska-proj-azure-2/providers/Microsoft.App/containerApps/high-7m4rp"
+      metricNamespace: ["Microsoft.App/containerApps"]
+      resourceType: ["Microsoft.App/containerApps"]
+      metric:
+        [
+          "CpuUsage",
+          "MemoryWorkingSetBytes",
+          "NetworkBytesReceived",
+          "NetworkBytesTransmitted",
+          "Requests",
+          "ReplicaCount",
+        ]
+      interval: ["PT1M"]
+      timespan: ["PT5M"]
+      aggregation: ["Average"]
+    static_configs:
+      - targets: ["azure-metrics-exporter:8080"]
+        labels:
+          app: "aca-high"
+          service: "aca-high"
+          provider: "azure"

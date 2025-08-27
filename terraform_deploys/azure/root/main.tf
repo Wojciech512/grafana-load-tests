@@ -117,7 +117,7 @@ module "container_app" {
     },
     high = {
       cpu_input           = 4.0,
-      memory_input        = "7.0Gi",
+      memory_input        = "8.0Gi",
       database_host_input = module.database.server_fqdns_output["database-b2ms-postgres"]
     }
   }
