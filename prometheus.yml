@@ -43,33 +43,39 @@ scrape_configs:
       - target_label: provider
         replacement: "django-gcp"
 
-  - job_name: "azure_containerapps_low"
-    scrape_interval: 60s
-    metrics_path: /probe/metrics/list
-    params:
-      subscription: ["a0714776-778a-4668-917f-b22059efed7f"]
-      resource:
-        - "/subscriptions/a0714776-778a-4668-917f-b22059efed7f/resourceGroups/praca-magisterska-proj-azure/providers/Microsoft.App/containerApps/low-7m4rp"
-      metricNamespace: ["Microsoft.App/containerApps"]
-      resourceType: ["Microsoft.App/containerApps"]
-      metric:
-        [
-          "CpuUsage",
-          "MemoryWorkingSetBytes",
-          "NetworkBytesReceived",
-          "NetworkBytesTransmitted",
-          "Requests",
-          "ReplicaCount",
-        ]
-      interval: ["PT1M"]
-      timespan: ["PT5M"]
-      aggregation: ["Average"]
-    static_configs:
-      - targets: ["azure-metrics-exporter:8080"]
-        labels:
-          app: "aca-low"
-          service: "aca-low"
-          provider: "azure"
+#TODO Jeśli chcesz “startup_latencies” jak w GCP, w ACA nie ma gotowej metryki providerowej. Najczęściej:
+#       - mierzony jest cold start przez App Insights/OTel (custom metrics/traces),
+#       - albo pośrednio przez opóźnienia pierwszych requestów. Tego azure-metrics-exporter nie zapewni “z pudełka”.
+
+#  - job_name: "azure_containerapps_low"
+#    scrape_interval: 60s
+#    metrics_path: /probe/metrics/list
+#    params:
+#      subscription: ["a0714776-778a-4668-917f-b22059efed7f"]
+#      resource:
+#        - "/subscriptions/a0714776-778a-4668-917f-b22059efed7f/resourceGroups/praca-magisterska-proj-azure/providers/Microsoft.App/containerApps/low-y3svv"
+#      metricNamespace: ["Microsoft.App/containerApps"]
+#      resourceType: ["Microsoft.App/containerApps"]
+#      metric:
+#        [
+#          "UsageNanoCores",      # CPU usage (nano cores) ~ odpowiednik cpu/usage
+#          "CpuPercentage",       # CPU utilization ~ odpowiednik cpu/utilizations
+#          "WorkingSetBytes",     # Memory usage (bytes) ~ odpowiednik memory/usage
+#          "MemoryPercentage",    # Memory utilization ~ odpowiednik memory/utilizations
+#          "RxBytes",             # Network received bytes ~ received_bytes_count
+#          "TxBytes",             # Network sent bytes ~ sent_bytes_count
+#          "Requests",            # Żądania (jeśli app je eksponuje w Azure Monitor)
+#          "Replicas",            # Instance count ~ instance_count
+#        ]
+#      interval: ["PT1M"]
+#      timespan: ["PT5M"]
+#      aggregation: ["Average"]
+#    static_configs:
+#      - targets: ["azure-metrics-exporter:8080"]
+#        labels:
+#          app: "aca-low"
+#          service: "aca-low"
+#          provider: "azure"
 
   - job_name: "azure_containerapps_medium"
     scrape_interval: 60s
@@ -77,17 +83,19 @@ scrape_configs:
     params:
       subscription: ["a0714776-778a-4668-917f-b22059efed7f"]
       resource:
-        - "/subscriptions/a0714776-778a-4668-917f-b22059efed7f/resourceGroups/praca-magisterska-proj-azure/providers/Microsoft.App/containerApps/medium-7m4rp"
+        - "/subscriptions/a0714776-778a-4668-917f-b22059efed7f/resourceGroups/praca-magisterska-proj-azure/providers/Microsoft.App/containerApps/medium-xv0v9"
       metricNamespace: ["Microsoft.App/containerApps"]
       resourceType: ["Microsoft.App/containerApps"]
       metric:
         [
-          "CpuUsage",
-          "MemoryWorkingSetBytes",
-          "NetworkBytesReceived",
-          "NetworkBytesTransmitted",
-          "Requests",
-          "ReplicaCount",
+          "UsageNanoCores",      # CPU usage (nano cores) ~ odpowiednik cpu/usage
+          "CpuPercentage",       # CPU utilization ~ odpowiednik cpu/utilizations
+          "WorkingSetBytes",     # Memory usage (bytes) ~ odpowiednik memory/usage
+          "MemoryPercentage",    # Memory utilization ~ odpowiednik memory/utilizations
+          "RxBytes",             # Network received bytes ~ received_bytes_count
+          "TxBytes",             # Network sent bytes ~ sent_bytes_count
+          "Requests",            # Żądania (jeśli app je eksponuje w Azure Monitor)
+          "Replicas",            # Instance count ~ instance_count
         ]
       interval: ["PT1M"]
       timespan: ["PT5M"]
@@ -99,30 +107,32 @@ scrape_configs:
           service: "aca-medium"
           provider: "azure"
 
-  - job_name: "azure_containerapps_high"
-    scrape_interval: 60s
-    metrics_path: /probe/metrics/list
-    params:
-      subscription: ["a0714776-778a-4668-917f-b22059efed7f"]
-      resource:
-        - "/subscriptions/a0714776-778a-4668-917f-b22059efed7f/resourceGroups/praca-magisterska-proj-azure/providers/Microsoft.App/containerApps/high-7m4rp"
-      metricNamespace: ["Microsoft.App/containerApps"]
-      resourceType: ["Microsoft.App/containerApps"]
-      metric:
-        [
-          "CpuUsage",
-          "MemoryWorkingSetBytes",
-          "NetworkBytesReceived",
-          "NetworkBytesTransmitted",
-          "Requests",
-          "ReplicaCount",
-        ]
-      interval: ["PT1M"]
-      timespan: ["PT5M"]
-      aggregation: ["Average"]
-    static_configs:
-      - targets: ["azure-metrics-exporter:8080"]
-        labels:
-          app: "aca-high"
-          service: "aca-high"
-          provider: "azure"
+#  - job_name: "azure_containerapps_high"
+#    scrape_interval: 60s
+#    metrics_path: /probe/metrics/list
+#    params:
+#      subscription: ["a0714776-778a-4668-917f-b22059efed7f"]
+#      resource:
+#        - "/subscriptions/a0714776-778a-4668-917f-b22059efed7f/resourceGroups/praca-magisterska-proj-azure/providers/Microsoft.App/containerApps/high-y3svv"
+#      metricNamespace: ["Microsoft.App/containerApps"]
+#      resourceType: ["Microsoft.App/containerApps"]
+#      metric:
+#        [
+#          "UsageNanoCores",      # CPU usage (nano cores) ~ odpowiednik cpu/usage
+#          "CpuPercentage",       # CPU utilization ~ odpowiednik cpu/utilizations
+#          "WorkingSetBytes",     # Memory usage (bytes) ~ odpowiednik memory/usage
+#          "MemoryPercentage",    # Memory utilization ~ odpowiednik memory/utilizations
+#          "RxBytes",             # Network received bytes ~ received_bytes_count
+#          "TxBytes",             # Network sent bytes ~ sent_bytes_count
+#          "Requests",            # Żądania (jeśli app je eksponuje w Azure Monitor)
+#          "Replicas",            # Instance count ~ instance_count
+#        ]
+#      interval: ["PT1M"]
+#      timespan: ["PT5M"]
+#      aggregation: ["Average"]
+#    static_configs:
+#      - targets: ["azure-metrics-exporter:8080"]
+#        labels:
+#          app: "aca-high"
+#          service: "aca-high"
+#          provider: "azure"

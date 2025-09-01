@@ -98,10 +98,11 @@ services:
     ports:
       - "8081:8080"
     environment:
-      AZURE_TENANT_ID: "${AZURE_TENANT_ID_PRIVATE}"
-      AZURE_CLIENT_ID: "${AZURE_CLIENT_ID_PRIVATE}"
-      AZURE_CLIENT_SECRET: "${AZURE_CLIENT_SECRET_PRIVATE}"
-      AZURE_SUBSCRIPTION_ID: "${AZURE_SUBSCRIPTION_ID_PRIVATE}"
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+      - LOG_DEVEL=true
     depends_on:
       - prometheus
       - grafana
@@ -127,35 +128,41 @@ services:
       - ./load-tests/tests/:/tests
     profiles: ["loadtests"]
 
-  k6-gcp-low:
-    extends: { service: k6-base }
-    environment:
-      - BASE_URL=---
-      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
-
-  k6-gcp-high:
-    extends: { service: k6-base }
-    environment:
-      - BASE_URL=---
-      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
-
-  k6-azure-low:
-    extends: { service: k6-base }
-    environment:
-      - BASE_URL=---
-      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
+#  k6-gcp-low:
+#    extends: { service: k6-base }
+#    environment:
+#      - BASE_URL=---
+#      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
+#
+#  k6-gcp-medium:
+#    extends: { service: k6-base }
+#    environment:
+#      - BASE_URL=---
+#      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
+#
+#  k6-gcp-high:
+#    extends: { service: k6-base }
+#    environment:
+#      - BASE_URL=---
+#      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
+#
+#  k6-azure-low:
+#    extends: { service: k6-base }
+#    environment:
+#      - BASE_URL=---
+#      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
 
   k6-azure-medium:
     extends: { service: k6-base }
     environment:
-      - BASE_URL=https://medium-y3svv.nicedune-24229e78.polandcentral.azurecontainerapps.io/
+      - BASE_URL=https://medium-xv0v9.graybush-b884251d.polandcentral.azurecontainerapps.io/
       - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
 
-  k6-azure-high:
-    extends: { service: k6-base }
-    environment:
-      - BASE_URL=---
-      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
+#  k6-azure-high:
+#    extends: { service: k6-base }
+#    environment:
+#      - BASE_URL=---
+#      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
 
 volumes:
   grafana_data: {}
