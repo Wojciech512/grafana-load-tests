@@ -32,6 +32,7 @@ services:
       - "--web.enable-remote-write-receiver"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./rules/startup.rules.yml:/etc/prometheus/rules/startup.rules.yml
       - prometheus_data:/prometheus
     ports:
       - "9090:9090"
@@ -146,23 +147,23 @@ services:
 #      - BASE_URL=---
 #      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
 #
-#  k6-azure-low:
-#    extends: { service: k6-base }
-#    environment:
-#      - BASE_URL=---
-#      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
+  k6-azure-low:
+    extends: { service: k6-base }
+    environment:
+      - BASE_URL=https://low-r405e.bluesmoke-4e360ff2.polandcentral.azurecontainerapps.io
+      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)",testid=azure-low
 
   k6-azure-medium:
     extends: { service: k6-base }
     environment:
-      - BASE_URL=https://medium-xv0v9.graybush-b884251d.polandcentral.azurecontainerapps.io/
-      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
+      - BASE_URL=https://medium-r405e.bluesmoke-4e360ff2.polandcentral.azurecontainerapps.io
+      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)",testid=azure-medium
 
-#  k6-azure-high:
-#    extends: { service: k6-base }
-#    environment:
-#      - BASE_URL=---
-#      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
+  k6-azure-high:
+    extends: { service: k6-base }
+    environment:
+      - BASE_URL=https://high-r405e.bluesmoke-4e360ff2.polandcentral.azurecontainerapps.io
+      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)",testid=azure-high
 
 volumes:
   grafana_data: {}

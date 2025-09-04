@@ -1,0 +1,21 @@
+groups:
+  - name: aca-startup
+    interval: 1m
+    rules:
+      # Estymata: czas (s) oczekiwania na pierwsze żądania, gdy repliki już są (>0).
+      # Uwaga: SUBQUERY musi mieć krok: [10m:1m], inaczej Prometheus zgłosi "ranges only allowed for vector selectors".
+      - record: aca_startup_pending_seconds
+        expr: |
+          sum_over_time(
+            (
+              (azurerm_resource_metric{metric="Replicas", job=~"azure_containerapps_.*"} > 0)
+              and on(resourceID)
+              (increase(azurerm_resource_metric{metric="Requests", job=~"azure_containerapps_.*"}[2m]) == 0)
+            )[10m:1m]
+          ) * 60
+      # Zgrupowanie do poziomu aplikacji (resourceName) – wygodne do wykresów bez subquery.
+      - record: aca_startup_pending_seconds_by_app
+        expr: |
+          avg by (resourceName, job, subscriptionID, resourceGroup, provider, service) (
+            aca_startup_pending_seconds
+          )
