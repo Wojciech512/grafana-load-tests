@@ -32,6 +32,7 @@ services:
       - "--web.enable-remote-write-receiver"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./rules/startup.rules.yml:/etc/prometheus/rules/startup.rules.yml
       - prometheus_data:/prometheus
     ports:
       - "9090:9090"
@@ -155,7 +156,7 @@ services:
   k6-azure-medium:
     extends: { service: k6-base }
     environment:
-      - BASE_URL=https://medium-xv0v9.graybush-b884251d.polandcentral.azurecontainerapps.io/
+      - BASE_URL=https://medium-s6on2.salmonisland-979c59a7.polandcentral.azurecontainerapps.io/
       - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
 
 #  k6-azure-high:

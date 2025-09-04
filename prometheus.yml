@@ -83,7 +83,7 @@ scrape_configs:
     params:
       subscription: ["a0714776-778a-4668-917f-b22059efed7f"]
       resource:
-        - "/subscriptions/a0714776-778a-4668-917f-b22059efed7f/resourceGroups/praca-magisterska-proj-azure/providers/Microsoft.App/containerApps/medium-xv0v9"
+        - "/subscriptions/a0714776-778a-4668-917f-b22059efed7f/resourceGroups/praca-magisterska-proj-azure/providers/Microsoft.App/containerApps/mmedium-s6on2"
       metricNamespace: ["Microsoft.App/containerApps"]
       resourceType: ["Microsoft.App/containerApps"]
       metric:
@@ -99,7 +99,7 @@ scrape_configs:
         ]
       interval: ["PT1M"]
       timespan: ["PT5M"]
-      aggregation: ["Average"]
+      aggregation: ["Average", "Total", "Sum"]
     static_configs:
       - targets: ["azure-metrics-exporter:8080"]
         labels:
@@ -136,3 +136,5 @@ scrape_configs:
 #          app: "aca-high"
 #          service: "aca-high"
 #          provider: "azure"
+rule_files:
+  - rules/startup.rules.yml
