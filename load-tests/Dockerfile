@@ -5,5 +5,3 @@ WORKDIR /tests
 USER root
 RUN apk update && apk add --no-cache curl
 USER k6
-
-ENTRYPOINT ["k6","run","--out","experimental-prometheus-rw","ecommerce-test.ts"]

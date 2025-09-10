@@ -8,16 +8,31 @@ scrape_configs:
       - targets:
           - "localhost:9090"
 
-  - job_name: "postgres-gcp"
-    static_configs:
-      - targets:
-          - "host.docker.internal:9187"
-        labels:
-          app: "postgres-gcp"
-          service: "postgres-gcp"
-    metric_relabel_configs:
-      - target_label: provider
-        replacement: "postgres-gcp"
+  #  - job_name: "postgres-gcp"
+  #    static_configs:
+  #      - targets:
+  #          - "host.docker.internal:9187"
+  #        labels:
+  #          app: "postgres-gcp"
+  #          service: "postgres-gcp"
+  #    metric_relabel_configs:
+  #      - target_label: provider
+  #        replacement: "postgres-gcp"
+
+  #  - job_name: "django-gcp"
+  #    scheme: https
+  #    metrics_path: "/metrics"
+  #    static_configs:
+  #      - targets:
+  #          - "praca-magisterska-django-app-1001731509124.europe-central2.run.app"
+  #        labels:
+  #          app: "django-gcp"
+  #          service: "django-gcp"
+  #    tls_config:
+  #      insecure_skip_verify: true
+  #    metric_relabel_configs:
+  #      - target_label: provider
+  #        replacement: "django-gcp"
 
   - job_name: "stackdriver_exporter-gcp"
     metrics_path: "/metrics"
@@ -28,20 +43,14 @@ scrape_configs:
           app: "stackdriver_exporter-gcp"
           service: "stackdriver_exporter-gcp"
 
-  - job_name: "django-gcp"
-    scheme: https
+  - job_name: "azure-metrics-exporter"
     metrics_path: "/metrics"
     static_configs:
       - targets:
-          - "praca-magisterska-django-app-1001731509124.europe-central2.run.app"
+          - "host.docker.internal:8081"
         labels:
-          app: "django-gcp"
-          service: "django-gcp"
-    tls_config:
-      insecure_skip_verify: true
-    metric_relabel_configs:
-      - target_label: provider
-        replacement: "django-gcp"
+          app: "azure-metrics-exporte"
+          service: "azure-metrics-exporte"
 
   - job_name: "azure_containerapps_low"
     scrape_interval: 60s
@@ -52,16 +61,15 @@ scrape_configs:
         - "/subscriptions/a0714776-778a-4668-917f-b22059efed7f/resourceGroups/praca-magisterska-proj-azure/providers/Microsoft.App/containerApps/low-r405e"
       metricNamespace: ["Microsoft.App/containerApps"]
       resourceType: ["Microsoft.App/containerApps"]
-      metric:
-        [
-          "UsageNanoCores",      # CPU usage (nano cores) ~ odpowiednik cpu/usage
-          "CpuPercentage",       # CPU utilization ~ odpowiednik cpu/utilizations
-          "WorkingSetBytes",     # Memory usage (bytes) ~ odpowiednik memory/usage
-          "MemoryPercentage",    # Memory utilization ~ odpowiednik memory/utilizations
-          "RxBytes",             # Network received bytes ~ received_bytes_count
-          "TxBytes",             # Network sent bytes ~ sent_bytes_count
-          "Requests",            # Żądania (jeśli app je eksponuje w Azure Monitor)
-          "Replicas",            # Instance count ~ instance_count
+      metric: [
+          "UsageNanoCores", # CPU usage (nano cores) ~ odpowiednik cpu/usage
+          "CpuPercentage", # CPU utilization ~ odpowiednik cpu/utilizations
+          "WorkingSetBytes", # Memory usage (bytes) ~ odpowiednik memory/usage
+          "MemoryPercentage", # Memory utilization ~ odpowiednik memory/utilizations
+          "RxBytes", # Network received bytes ~ received_bytes_count
+          "TxBytes", # Network sent bytes ~ sent_bytes_count
+          "Requests", # Żądania (jeśli app je eksponuje w Azure Monitor)
+          "Replicas", # Instance count ~ instance_count
         ]
       interval: ["PT1M"]
       timespan: ["PT5M"]
@@ -82,16 +90,15 @@ scrape_configs:
         - "/subscriptions/a0714776-778a-4668-917f-b22059efed7f/resourceGroups/praca-magisterska-proj-azure/providers/Microsoft.App/containerApps/medium-r405e"
       metricNamespace: ["Microsoft.App/containerApps"]
       resourceType: ["Microsoft.App/containerApps"]
-      metric:
-        [
-          "UsageNanoCores",      # CPU usage (nano cores) ~ odpowiednik cpu/usage
-          "CpuPercentage",       # CPU utilization ~ odpowiednik cpu/utilizations
-          "WorkingSetBytes",     # Memory usage (bytes) ~ odpowiednik memory/usage
-          "MemoryPercentage",    # Memory utilization ~ odpowiednik memory/utilizations
-          "RxBytes",             # Network received bytes ~ received_bytes_count
-          "TxBytes",             # Network sent bytes ~ sent_bytes_count
-          "Requests",            # Żądania (jeśli app je eksponuje w Azure Monitor)
-          "Replicas",            # Instance count ~ instance_count
+      metric: [
+          "UsageNanoCores", # CPU usage (nano cores) ~ odpowiednik cpu/usage
+          "CpuPercentage", # CPU utilization ~ odpowiednik cpu/utilizations
+          "WorkingSetBytes", # Memory usage (bytes) ~ odpowiednik memory/usage
+          "MemoryPercentage", # Memory utilization ~ odpowiednik memory/utilizations
+          "RxBytes", # Network received bytes ~ received_bytes_count
+          "TxBytes", # Network sent bytes ~ sent_bytes_count
+          "Requests", # Żądania (jeśli app je eksponuje w Azure Monitor)
+          "Replicas", # Instance count ~ instance_count
         ]
       interval: ["PT1M"]
       timespan: ["PT5M"]
@@ -112,16 +119,15 @@ scrape_configs:
         - "/subscriptions/a0714776-778a-4668-917f-b22059efed7f/resourceGroups/praca-magisterska-proj-azure/providers/Microsoft.App/containerApps/high-r405e"
       metricNamespace: ["Microsoft.App/containerApps"]
       resourceType: ["Microsoft.App/containerApps"]
-      metric:
-        [
-          "UsageNanoCores",      # CPU usage (nano cores) ~ odpowiednik cpu/usage
-          "CpuPercentage",       # CPU utilization ~ odpowiednik cpu/utilizations
-          "WorkingSetBytes",     # Memory usage (bytes) ~ odpowiednik memory/usage
-          "MemoryPercentage",    # Memory utilization ~ odpowiednik memory/utilizations
-          "RxBytes",             # Network received bytes ~ received_bytes_count
-          "TxBytes",             # Network sent bytes ~ sent_bytes_count
-          "Requests",            # Żądania (jeśli app je eksponuje w Azure Monitor)
-          "Replicas",            # Instance count ~ instance_count
+      metric: [
+          "UsageNanoCores", # CPU usage (nano cores) ~ odpowiednik cpu/usage
+          "CpuPercentage", # CPU utilization ~ odpowiednik cpu/utilizations
+          "WorkingSetBytes", # Memory usage (bytes) ~ odpowiednik memory/usage
+          "MemoryPercentage", # Memory utilization ~ odpowiednik memory/utilizations
+          "RxBytes", # Network received bytes ~ received_bytes_count
+          "TxBytes", # Network sent bytes ~ sent_bytes_count
+          "Requests", # Żądania (jeśli app je eksponuje w Azure Monitor)
+          "Replicas", # Instance count ~ instance_count
         ]
       interval: ["PT1M"]
       timespan: ["PT5M"]

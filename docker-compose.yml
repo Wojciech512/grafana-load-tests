@@ -1,7 +1,4 @@
 version: "3.9"
-#TODO DODAĆ ADNOTACJE DO METRYK KONTENERA? NIE LEPIEJ WYPISYWAĆ PRZEDZIAŁY CZASOWE I NA PODSTAWIE TEGO FILTROWAĆ?
-#TODO uruchomić testy i zweryfikować jak zbieraja się dane oraz czy widać na każdym rozpoczęcie i zakończenie testów
-#TODO przygotować monitoring na azure (CPU, RAM, sieć, autoscaling) wdrożyć identyczne wykresy dla azure
 
 services:
   grafana:
@@ -18,13 +15,14 @@ services:
       - GRAFANA_TOKEN=${GRAFANA_TOKEN}
       - K6_TEST_START=${TEST_START}
       - GRAFANA_URL=http://grafana:3000
-      - RUN_ID=${RUN_ID:-$(date +%s)}
     depends_on:
       - prometheus
 
   prometheus:
     image: prom/prometheus:latest
     restart: unless-stopped
+    environment:
+      - PROMETHEUS_TOKEN=${PROMETHEUS_TOKEN}
     env_file:
       - .env
     command:
@@ -121,49 +119,60 @@ services:
           cpus: "4.0"
           memory: 4G
     environment:
-      - K6_PROMETHEUS_RW_SERVER_URL=http://host.docker.internal:9090/api/v1/write
-      - K6_PROMETHEUS_RW_TREND_STATS=p(95),p(99),count,min,max,avg,sum
-      - GRAFANA_URL=host.docker.internal:3000
-      - GRAFANA_TOKEN=${GRAFANA_TOKEN}
+      - K6_OUT=experimental-prometheus-rw
+      - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write
+      - K6_PROMETHEUS_RW_TREND_AS_HISTOGRAM=false
+      # do weryfikacji w prometheus {__name__=~"k6_http_req_duration_.*"}
+      - K6_SUMMARY_TREND_STATS=avg,min,max,p(50),p(95),p(99)
+      - K6_PROMETHEUS_LABELS=cloud=azure
+      - GRAFANA_URL=http://grafana:3000
     volumes:
       - ./load-tests/tests/:/tests
+    command: ["run", "/tests/ecommerce-test.ts"]
     profiles: ["loadtests"]
 
-#  k6-gcp-low:
-#    extends: { service: k6-base }
-#    environment:
-#      - BASE_URL=---
-#      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
-#
-#  k6-gcp-medium:
-#    extends: { service: k6-base }
-#    environment:
-#      - BASE_URL=---
-#      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)"
-#
-#  k6-gcp-high:
-#    extends: { service: k6-base }
-#    environment:
-#      - BASE_URL=---
-#      - K6_PROMETHEUS_LABELS="cloud=gcp,run=$(date +%s)"
-#
+  #Todo DODAĆ RUN_ID I K6_TAGS
+  k6-gcp-low:
+    extends: { service: k6-base }
+    environment:
+      - BASE_URL=
+      - RUN_ID=${RUN_ID_AZURE_LOW}
+      - K6_TAGS=testid:${RUN_ID_AZURE_LOW}
+
+  k6-gcp-medium:
+    extends: { service: k6-base }
+    environment:
+      - BASE_URL=
+      - RUN_ID=${RUN_ID_AZURE_LOW}
+      - K6_TAGS=testid:${RUN_ID_AZURE_LOW}
+
+  k6-gcp-high:
+    extends: { service: k6-base }
+    environment:
+      - BASE_URL=
+      - RUN_ID=${RUN_ID_AZURE_LOW}
+      - K6_TAGS=testid:${RUN_ID_AZURE_LOW}
+
   k6-azure-low:
     extends: { service: k6-base }
     environment:
       - BASE_URL=https://low-r405e.bluesmoke-4e360ff2.polandcentral.azurecontainerapps.io
-      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)",testid=azure-low
+      - RUN_ID=${RUN_ID_AZURE_LOW}
+      - K6_TAGS=testid:${RUN_ID_AZURE_LOW}
 
   k6-azure-medium:
     extends: { service: k6-base }
     environment:
       - BASE_URL=https://medium-r405e.bluesmoke-4e360ff2.polandcentral.azurecontainerapps.io
-      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)",testid=azure-medium
+      - RUN_ID=${RUN_ID_AZURE_MEDIUM}
+      - K6_TAGS=testid:${RUN_ID_AZURE_MEDIUM}
 
   k6-azure-high:
     extends: { service: k6-base }
     environment:
       - BASE_URL=https://high-r405e.bluesmoke-4e360ff2.polandcentral.azurecontainerapps.io
-      - K6_PROMETHEUS_LABELS="cloud=azure,run=$(date +%s)",testid=azure-high
+      - RUN_ID=${RUN_ID_AZURE_HIGH}
+      - K6_TAGS=testid:${RUN_ID_AZURE_HIGH}
 
 volumes:
   grafana_data: {}
