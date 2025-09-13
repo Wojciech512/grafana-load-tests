@@ -122,36 +122,42 @@ services:
       - K6_OUT=experimental-prometheus-rw
       - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write
       - K6_PROMETHEUS_RW_TREND_AS_HISTOGRAM=false
-      # do weryfikacji w prometheus {__name__=~"k6_http_req_duration_.*"}
       - K6_SUMMARY_TREND_STATS=avg,min,max,p(50),p(95),p(99)
       - K6_PROMETHEUS_LABELS=cloud=azure
       - GRAFANA_URL=http://grafana:3000
+      - BREAK_BETWEEN_SETS=3
+      - BREAK_BETWEEN_TESTS=1
+      #token k6, id dashboardów
+      - GRAFANA_TOKEN=${GRAFANA_K6_TOKEN}
+      - DASHBOARD_IDS_TO_ANNOTATE=4,7
     volumes:
       - ./load-tests/tests/:/tests
     command: ["run", "/tests/ecommerce-test.ts"]
     profiles: ["loadtests"]
 
-  #Todo DODAĆ RUN_ID I K6_TAGS
   k6-gcp-low:
     extends: { service: k6-base }
     environment:
       - BASE_URL=
-      - RUN_ID=${RUN_ID_AZURE_LOW}
-      - K6_TAGS=testid:${RUN_ID_AZURE_LOW}
+      - RUN_ID=${RUN_ID_GCP_LOW}
+      - K6_TAGS=testid:${RUN_ID_GCP_LOW}
+      - CLOUD_PROVIDER=gcp
 
   k6-gcp-medium:
     extends: { service: k6-base }
     environment:
       - BASE_URL=
-      - RUN_ID=${RUN_ID_AZURE_LOW}
-      - K6_TAGS=testid:${RUN_ID_AZURE_LOW}
+      - RUN_ID=${RUN_ID_GCP_MEDIUM}
+      - K6_TAGS=testid:${RUN_ID_GCP_MEDIUM}
+      - CLOUD_PROVIDER=gcp
 
   k6-gcp-high:
     extends: { service: k6-base }
     environment:
       - BASE_URL=
-      - RUN_ID=${RUN_ID_AZURE_LOW}
-      - K6_TAGS=testid:${RUN_ID_AZURE_LOW}
+      - RUN_ID=${RUN_ID_GCP_HIGH}
+      - K6_TAGS=testid:${RUN_ID_GCP_HIGH}
+      - CLOUD_PROVIDER=gcp
 
   k6-azure-low:
     extends: { service: k6-base }
@@ -159,6 +165,7 @@ services:
       - BASE_URL=https://low-r405e.bluesmoke-4e360ff2.polandcentral.azurecontainerapps.io
       - RUN_ID=${RUN_ID_AZURE_LOW}
       - K6_TAGS=testid:${RUN_ID_AZURE_LOW}
+      - CLOUD_PROVIDER=azure
 
   k6-azure-medium:
     extends: { service: k6-base }
@@ -166,6 +173,7 @@ services:
       - BASE_URL=https://medium-r405e.bluesmoke-4e360ff2.polandcentral.azurecontainerapps.io
       - RUN_ID=${RUN_ID_AZURE_MEDIUM}
       - K6_TAGS=testid:${RUN_ID_AZURE_MEDIUM}
+      - CLOUD_PROVIDER=azure
 
   k6-azure-high:
     extends: { service: k6-base }
@@ -173,6 +181,7 @@ services:
       - BASE_URL=https://high-r405e.bluesmoke-4e360ff2.polandcentral.azurecontainerapps.io
       - RUN_ID=${RUN_ID_AZURE_HIGH}
       - K6_TAGS=testid:${RUN_ID_AZURE_HIGH}
+      - CLOUD_PROVIDER=azure
 
 volumes:
   grafana_data: {}
