@@ -129,7 +129,7 @@ services:
       - BREAK_BETWEEN_TESTS=1
       #token k6, id dashboardów
       - GRAFANA_TOKEN=${GRAFANA_K6_TOKEN}
-      - DASHBOARD_IDS_TO_ANNOTATE=4,7
+      - DASHBOARD_IDS_TO_ANNOTATE=3,8
     volumes:
       - ./load-tests/tests/:/tests
     command: ["run", "/tests/ecommerce-test.ts"]

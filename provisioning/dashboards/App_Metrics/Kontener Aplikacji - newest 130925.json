@@ -7,18 +7,181 @@
           "type": "grafana",
           "uid": "-- Grafana --"
         },
-        "enable": true,
+        "enable": false,
         "hide": true,
-        "iconColor": "rgba(0, 211, 255, 1)",
+        "iconColor": "yellow",
         "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
         "type": "dashboard"
+      },
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "green",
+        "name": "test_start",
+        "target": {
+          "expr": "",
+          "interval": "",
+          "limit": 2000,
+          "refId": "Anno",
+          "tags": [
+            "test_start"
+          ],
+          "type": "tags"
+        }
+      },
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "red",
+        "name": "test_end",
+        "target": {
+          "expr": "",
+          "interval": "",
+          "limit": 2000,
+          "refId": "Anno",
+          "type": "tags"
+        }
+      },
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "blue",
+        "name": "cold_start",
+        "target": {
+          "expr": "",
+          "interval": "",
+          "limit": 2000,
+          "refId": "Anno",
+          "tags": [
+            "cold_start"
+          ],
+          "type": "tags"
+        }
+      },
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "purple",
+        "name": "steady_load",
+        "target": {
+          "expr": "",
+          "interval": "",
+          "limit": 2000,
+          "refId": "Anno",
+          "tags": [
+            "steady_load"
+          ],
+          "type": "tags"
+        }
+      },
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "blue",
+        "name": "stress",
+        "target": {
+          "expr": "",
+          "interval": "",
+          "limit": 2000,
+          "refId": "Anno",
+          "tags": [
+            "stress"
+          ],
+          "type": "tags"
+        }
+      },
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "purple",
+        "name": "spike",
+        "target": {
+          "expr": "",
+          "interval": "",
+          "limit": 2000,
+          "refId": "Anno",
+          "tags": [
+            "spike"
+          ],
+          "type": "tags"
+        }
+      },
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "blue",
+        "name": "soak",
+        "target": {
+          "expr": "",
+          "interval": "",
+          "limit": 2000,
+          "refId": "Anno",
+          "tags": [
+            "soak"
+          ],
+          "type": "tags"
+        }
+      },
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "dark-red",
+        "name": "error",
+        "target": {
+          "expr": "",
+          "interval": "",
+          "limit": 2000,
+          "refId": "Anno",
+          "tags": [
+            "test_crash"
+          ],
+          "type": "tags"
+        }
       }
     ]
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 25,
+  "id": 10,
   "links": [],
   "panels": [
     {
@@ -70,7 +233,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -101,7 +265,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -115,9 +279,22 @@
           "legendFormat": "Cloud run",
           "range": true,
           "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "expr": "quantile_over_time(\r\n  0.99,\r\n  (\r\n    avg by (resourceName) (\r\n      azurerm_resource_metric{\r\n        metric=\"CpuPercentage\",\r\n        aggregation=\"average\"\r\n      }\r\n    )\r\n  )[30m:1m]\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
-      "title": "Maksymalne wykorzystanie CPU [99%] -  Wykorzystanie Procesora",
+      "title": "Maksymalne wykorzystanie CPU [99-ty percentyl] -  Wykorzystanie Procesora",
       "type": "timeseries"
     },
     {
@@ -168,7 +345,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -199,7 +377,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "editorMode": "code",
@@ -207,9 +385,22 @@
           "legendFormat": "Cloud Run",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "expr": "quantile_over_time(\r\n  0.99,\r\n  (\r\n    avg by (resourceName) (\r\n      azurerm_resource_metric{\r\n        metric=\"MemoryPercentage\",\r\n        aggregation=\"average\"\r\n      }\r\n    )\r\n  )[30m:1m]\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B"
         }
       ],
-      "title": "Maksymalne wykorzystanie RAM (99-ty percentyl) - Wykorzystanie Pamięci",
+      "title": "Maksymalne wykorzystanie RAM [99-ty percentyl] - Wykorzystanie Pamięci",
       "type": "timeseries"
     },
     {
@@ -260,7 +451,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -291,7 +483,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "editorMode": "code",
@@ -299,9 +491,22 @@
           "legendFormat": "Cloud Run",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "expr": "quantile_over_time(\r\n  0.99,\r\n  (  avg by (resourceName) (\r\n  aca_startup_pending_seconds_by_app{}\r\n  ))[30m:1m]\r\n\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B"
         }
       ],
-      "title": "Czas oczekiwania na uruchomienie kontenera (99-ty percentyl)",
+      "title": "Czas oczekiwania na uruchomienie kontenera [99-ty percentyl] ",
       "type": "timeseries"
     },
     {
@@ -353,7 +558,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -384,7 +590,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -398,9 +604,22 @@
           "legendFormat": "Cloud run",
           "range": true,
           "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "expr": "quantile_over_time(\r\n  0.95,\r\n  (\r\n    avg by (resourceName) (\r\n      azurerm_resource_metric{\r\n        metric=\"CpuPercentage\",\r\n        aggregation=\"average\"\r\n      }\r\n    )\r\n  )[30m:1m]\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
-      "title": "Maksymalne wykorzystanie CPU [95%] -  Wykorzystanie Procesora",
+      "title": "Maksymalne wykorzystanie CPU  [95-ty percentyl] -  Wykorzystanie Procesora",
       "type": "timeseries"
     },
     {
@@ -451,7 +670,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -482,7 +702,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "editorMode": "code",
@@ -490,9 +710,22 @@
           "legendFormat": "Cloud Run",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "expr": "quantile_over_time(\r\n  0.95,\r\n  (\r\n    avg by (resourceName) (\r\n      azurerm_resource_metric{\r\n        metric=\"MemoryPercentage\",\r\n        aggregation=\"average\"\r\n      }\r\n    )\r\n  )[30m:1m]\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B"
         }
       ],
-      "title": "Maksymalne wykorzystanie RAM (95-ty percentyl) - Wykorzystanie Pamięci",
+      "title": "Maksymalne wykorzystanie RAM  [95-ty percentyl] - Wykorzystanie Pamięci",
       "type": "timeseries"
     },
     {
@@ -543,7 +776,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -574,7 +808,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "editorMode": "code",
@@ -582,9 +816,22 @@
           "legendFormat": "Cloud Run",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "expr": "quantile_over_time(\r\n  0.95,\r\n  (  avg by (resourceName) (\r\n  aca_startup_pending_seconds_by_app{}\r\n  ))[30m:1m]\r\n\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B"
         }
       ],
-      "title": "Czas oczekiwania na uruchomienie kontenera (95-ty percentyl)",
+      "title": "Czas oczekiwania na uruchomienie kontenera [95-ty percentyl] ",
       "type": "timeseries"
     },
     {
@@ -636,7 +883,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -667,7 +915,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -681,9 +929,22 @@
           "legendFormat": "Cloud run",
           "range": true,
           "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "expr": "quantile_over_time(\r\n  0.50,\r\n  (\r\n    avg by (resourceName) (\r\n      azurerm_resource_metric{\r\n        metric=\"CpuPercentage\",\r\n        aggregation=\"average\"\r\n      }\r\n    )\r\n  )[30m:1m]\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
-      "title": "Maksymalne wykorzystanie CPU [50%] -  Wykorzystanie Procesora",
+      "title": "Maksymalne wykorzystanie CPU [50-ty percentyl] -  Wykorzystanie Procesora",
       "type": "timeseries"
     },
     {
@@ -734,7 +995,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -765,7 +1027,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "editorMode": "code",
@@ -773,9 +1035,22 @@
           "legendFormat": "Cloud Run",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "expr": "quantile_over_time(\r\n  0.5,\r\n  (\r\n    avg by (resourceName) (\r\n      azurerm_resource_metric{\r\n        metric=\"MemoryPercentage\",\r\n        aggregation=\"average\"\r\n      }\r\n    )\r\n  )[30m:1m]\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B"
         }
       ],
-      "title": "Maksymalne wykorzystanie RAM (50-ty percentyl) - Wykorzystanie Pamięci",
+      "title": "Maksymalne wykorzystanie RAM [50-ty percentyl]  - Wykorzystanie Pamięci",
       "type": "timeseries"
     },
     {
@@ -826,7 +1101,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -857,7 +1133,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "editorMode": "code",
@@ -865,9 +1141,22 @@
           "legendFormat": "Cloud Run",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "expr": "quantile_over_time(\r\n  0.5,\r\n  (  avg by (resourceName) (\r\n  aca_startup_pending_seconds_by_app{}\r\n  ))[30m:1m]\r\n\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B"
         }
       ],
-      "title": "Czas oczekiwania na uruchomienie kontenera (50-ty percentyl)",
+      "title": "Czas oczekiwania na uruchomienie kontenera [50-ty percentyl] ",
       "type": "timeseries"
     },
     {
@@ -918,7 +1207,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -927,32 +1217,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "Cloud Run"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -974,7 +1239,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -989,6 +1254,19 @@
           "legendFormat": "Cloud Run",
           "range": true,
           "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "expr": "stddev_over_time(\r\n(\r\n    sum by (resourceName) (\r\n      azurerm_resource_metric{\r\n        metric=\"CpuPercentage\",\r\n        aggregation=\"total\"\r\n      }\r\n    )\r\n  )[30m:1m]\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
       "title": "Odchylenie standardowe -  Wykorzystanie Procesora",
@@ -1042,7 +1320,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1051,32 +1330,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "Cloud Run"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -1098,7 +1352,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1113,6 +1367,19 @@
           "legendFormat": "Cloud Run",
           "range": true,
           "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "expr": "stddev_over_time(\r\n(\r\n    sum by (resourceName) (\r\n      azurerm_resource_metric{\r\n        metric=\"MemoryPercentage\",\r\n        aggregation=\"total\"\r\n      }\r\n    )\r\n  )[30m:1m]\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
       "title": "Odchylenie standardowe RAM - Wykorzystanie Pamięci",
@@ -1166,7 +1433,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1175,32 +1443,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "Cloud Run"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -1222,7 +1465,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1237,6 +1480,19 @@
           "legendFormat": "Cloud Run",
           "range": true,
           "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "expr": "stddev_over_time(\r\n(\r\n    sum by (resourceName) (\r\n  aca_startup_pending_seconds_by_app{}\r\n\r\n    )\r\n  )[30m:1m]\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
       "title": "Odchylenie standardowe - Czas oczekiwania na uruchomienie kontenera",
@@ -1290,7 +1546,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1299,32 +1556,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "Cloud Run"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -1346,7 +1578,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1361,6 +1593,19 @@
           "legendFormat": "Cloud Run",
           "range": true,
           "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "expr": "stdvar_over_time(\r\n(\r\n    sum by (resourceName) (\r\n      azurerm_resource_metric{\r\n        metric=\"CpuPercentage\",\r\n        aggregation=\"total\"\r\n      }\r\n    )\r\n  )[30m:1m]\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
       "title": "Wariancja -  Wykorzystanie Procesora",
@@ -1414,7 +1659,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1423,32 +1669,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "Cloud Run"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -1470,7 +1691,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1485,6 +1706,19 @@
           "legendFormat": "Cloud Run",
           "range": true,
           "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "expr": "stdvar_over_time(\r\n(\r\n    sum by (resourceName) (\r\n      azurerm_resource_metric{\r\n        metric=\"MemoryPercentage\",\r\n        aggregation=\"total\"\r\n      }\r\n    )\r\n  )[30m:1m]\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
       "title": "Wariancja RAM - Wykorzystanie Pamięci",
@@ -1538,7 +1772,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1547,32 +1782,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "Cloud Run"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -1594,7 +1804,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1609,6 +1819,19 @@
           "legendFormat": "Cloud Run",
           "range": true,
           "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "expr": "stdvar_over_time(\r\n(\r\n    sum by (resourceName) (\r\n  aca_startup_pending_seconds_by_app{}\r\n    )\r\n  )[30m:1m]\r\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
       "title": "Wariancja - Czas oczekiwania na uruchomienie kontenera",
@@ -1662,7 +1885,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1693,7 +1917,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "editorMode": "code",
@@ -1707,9 +1931,11 @@
             "type": "prometheus",
             "uid": "DS_PROMETHEUS-LOCAL"
           },
-          "expr": "",
+          "editorMode": "code",
+          "expr": "sum by (resourceName)(\r\n  rate(\r\n      azurerm_resource_metric{\r\n        metric=\"TxBytes\",\r\n        aggregation=\"total\"\r\n      }[30m]\r\n  )\r\n)",
           "hide": false,
           "instant": false,
+          "legendFormat": "__auto",
           "range": true,
           "refId": "B"
         }
@@ -1765,7 +1991,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1796,7 +2023,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "editorMode": "code",
@@ -1810,9 +2037,11 @@
             "type": "prometheus",
             "uid": "DS_PROMETHEUS-LOCAL"
           },
-          "expr": "",
+          "editorMode": "code",
+          "expr": "sum by (resourceName)(\r\n  rate(\r\n      azurerm_resource_metric{\r\n        metric=\"RxBytes\",\r\n        aggregation=\"total\"\r\n      }[30m]\r\n  )\r\n)",
           "hide": false,
           "instant": false,
+          "legendFormat": "__auto",
           "range": true,
           "refId": "B"
         }
@@ -1868,7 +2097,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1899,7 +2129,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0+security-01",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "editorMode": "code",
@@ -1907,9 +2137,24 @@
           "legendFormat": "Cloud Run",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_PROMETHEUS-LOCAL"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "avg(\r\n  azurerm_resource_metric{metric=\"Replicas\", aggregation=\"average\"}\r\n) by (resourceName)\r\n",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B"
         }
       ],
-      "title": "Liczba aktywnych instancji",
+      "title": "Liczba aktywnych instancji [Średnia]",
       "type": "timeseries"
     }
   ],
@@ -1926,7 +2171,7 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Kontener Aplikacji",
-  "uid": "3ba84094-62f9-4b1b-8043-5315085de137",
-  "version": 80
+  "title": "Kontener Aplikacji 09092025",
+  "uid": "40f9e67c-9c08-481f-9319-08a39f2fe84b",
+  "version": 6
 }
