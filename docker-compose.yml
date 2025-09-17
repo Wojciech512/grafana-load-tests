@@ -21,8 +21,6 @@ services:
   prometheus:
     image: prom/prometheus:latest
     restart: unless-stopped
-    environment:
-      - PROMETHEUS_TOKEN=${PROMETHEUS_TOKEN}
     env_file:
       - .env
     command:
@@ -61,17 +59,14 @@ services:
   #      DATA_SOURCE_NAME: "postgresql://${GOOGLE_POSTGRESQL_USERNAME}:${GOOGLE_POSTGRESQL_PASSWORD}@gcp-sql-proxy:5432/${GOOGLE_POSTGRESQL_NAME}?sslmode=disable"
   #    ports:
   #      - "9187:9187"
-  #TODO zweryfikować paramety pozyskiwane przez oba eksportery np interval co ile 1m, jakie metryki
+
   stackdriver-exporter-gcp:
     image: quay.io/prometheuscommunity/stackdriver-exporter:latest
     restart: unless-stopped
-    # TODO ustalić konktetne zmienne nie cały plik
-    env_file:
-      - .env
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/etc/stackdriver/gcp-credentials.json
     command:
-      - --google.project-id=${GCP_PROJECT_ID}
+      - --google.project-id=praca-magisterska-gcp
       - --monitoring.metrics-prefixes=run.googleapis.com/container/cpu/usage
       - --monitoring.metrics-prefixes=run.googleapis.com/container/cpu/utilizations
       - --monitoring.metrics-prefixes=run.googleapis.com/container/memory/usage
