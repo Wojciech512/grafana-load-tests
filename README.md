@@ -147,3 +147,6 @@ Definicja Virtual Network i Subnet (bez service_endpoints)
 ## debug logs
 
 URL/api/logstream
+
+
+europe-central2-docker.pkg.dev/praca-magisterska-gcp/praca-magisterska-artifact-registry

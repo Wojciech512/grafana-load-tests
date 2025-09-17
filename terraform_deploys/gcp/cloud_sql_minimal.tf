@@ -35,7 +35,8 @@ resource "google_sql_database_instance" "postgres_minimal" {
 }
 
 resource "google_sql_user" "postgres_user_minimal" {
-  name        = var.GOOGLE_POSTGRESQL_NAME
-  instance    = google_sql_database_instance.postgres_minimal.name
-  password_wo = var.GOOGLE_POSTGRESQL_PASSWORD
+  name                = var.GOOGLE_POSTGRESQL_NAME
+  instance            = google_sql_database_instance.postgres_minimal.name
+  password_wo         = var.GOOGLE_POSTGRESQL_PASSWORD
+  password_wo_version = var.GOOGLE_POSTGRESQL_PASSWORD_VERSION
 }

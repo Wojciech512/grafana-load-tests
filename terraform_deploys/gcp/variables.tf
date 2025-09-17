@@ -1,6 +1,6 @@
 variable "project_id" {
   type    = string
-  default = "praca-magisterska-proj-gcp-1"
+  default = "praca-magisterska-gcp"
 }
 
 variable "project_region" {
@@ -10,7 +10,7 @@ variable "project_region" {
 
 variable "project_name" {
   type    = string
-  default = "praca-magisterska-projekt-gcp"
+  default = "praca-magisterska-gcp"
 }
 
 variable "repository_id" {
@@ -62,6 +62,11 @@ variable "GOOGLE_POSTGRESQL_USERNAME" {
 }
 
 variable "GOOGLE_POSTGRESQL_PASSWORD" {
+  type      = string
+  sensitive = true
+}
+
+variable "GOOGLE_POSTGRESQL_PASSWORD_VERSION" {
   type      = string
   sensitive = true
 }

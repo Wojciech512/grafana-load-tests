@@ -43,6 +43,51 @@ scrape_configs:
           app: "stackdriver_exporter-gcp"
           service: "stackdriver_exporter-gcp"
 
+  - job_name: "gcp_cloudrun_low"
+    scrape_interval: 60s
+    static_configs:
+      - targets: ["stackdriver-exporter-gcp:8080"]
+        labels:
+          {
+            provider: "gcp",
+            app: "gcp-cloudrun-low",
+            service: "gcp-cloudrun-low",
+          }
+    metric_relabel_configs:
+      - source_labels: [service_name]
+        regex: praca-magisterska-django-app-low
+        action: keep
+
+  - job_name: "gcp_cloudrun_medium"
+    scrape_interval: 60s
+    static_configs:
+      - targets: ["stackdriver-exporter-gcp:8080"]
+        labels:
+          {
+            provider: "gcp",
+            app: "gcp-cloudrun-medium",
+            service: "gcp-cloudrun-medium",
+          }
+    metric_relabel_configs:
+      - source_labels: [service_name]
+        regex: praca-magisterska-django-app-medium
+        action: keep
+
+  - job_name: "gcp_cloudrun_high"
+    scrape_interval: 60s
+    static_configs:
+      - targets: ["stackdriver-exporter-gcp:8080"]
+        labels:
+          {
+            provider: "gcp",
+            app: "gcp-cloudrun-high",
+            service: "gcp-cloudrun-high",
+          }
+    metric_relabel_configs:
+      - source_labels: [service_name]
+        regex: praca-magisterska-django-app-high
+        action: keep
+
   - job_name: "azure-metrics-exporter"
     metrics_path: "/metrics"
     static_configs:

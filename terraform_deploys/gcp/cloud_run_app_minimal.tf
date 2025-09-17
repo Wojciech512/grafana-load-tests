@@ -13,7 +13,7 @@ resource "google_cloud_run_v2_service" "django_public_minimal" {
     service_account = google_service_account.proxy["minimal"].email
 
     containers {
-      image = "${var.project_region}-docker.pkg.dev/${var.project_id}/${var.repository_id}/django-app:latest"
+      image = "${var.project_region}-docker.pkg.dev/${var.project_id}/${var.repository_id}/ecommerce-app:latest"
 
       ports {
         container_port = 8000
