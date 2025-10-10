@@ -1,4 +1,9 @@
 .env
+node_modules/
+load-tests/.env
+load-tests/.env.local
+load-tests/.env.*
+!load-tests/.env.example
 terraform_deploys/**/*.json
 terraform_deploys/**/*.tfvars
 terraform_deploys/**/.terraform
